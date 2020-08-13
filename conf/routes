@@ -11,3 +11,7 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 
 #  api controllers mapping
 GET     /api/todos                  controllers.api.TodoController.getAll
+
+
+#  api controllers mapping
+POST     /api/solve                 controllers.api.TodoController.solve
