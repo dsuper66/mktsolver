@@ -24,23 +24,4 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)
       Ok(views.html.index())
     }
 
-  def save =
-    Action { request: Request[AnyContent] =>
-      val body: AnyContent = request.body
-      val jsonBody: Option[JsValue] = body.asJson
-
-      // Expecting json body
-      jsonBody
-        .map { json =>
-          val subCategories =
-            (json \ "sub-categories").as[List[Map[String, String]]]
-
-          val names = subCategories.map(_("elementId"))
-          Ok("Got: " + names)
-        }
-        .getOrElse {
-          BadRequest("Expecting application/json request body")
-        }
-    }
-
 }
