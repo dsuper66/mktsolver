@@ -4,3 +4,17 @@
 2020.08.13 23:22:21 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/HomeController.scala
 Aug 14, 2020 8:28:41 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
 INFO: Unsupported notification method: $/setTraceNotification
+Aug 14, 2020 8:28:59 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+Aug 14, 2020 8:29:01 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+Aug 14, 2020 8:59:12 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+Aug 14, 2020 8:59:41 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+2020.08.14 09:00:13 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/HomeController.scala
+2020.08.14 09:03:42 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/HomeController.scala
+Aug 14, 2020 9:03:45 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+Aug 14, 2020 9:04:04 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
