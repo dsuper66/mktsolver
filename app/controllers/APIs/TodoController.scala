@@ -36,7 +36,7 @@ class TodoController @Inject() (
                 (json \ "elements").as[List[Map[String, String]]]
 
             val outString: String = ""
-            for ((k,v) <- m1) outString += ("key: %s, value: %s\n", k, v)
+            for ((k,v) <- elementToBus) outString += ("key: %s, value: %s\n", k, v)
 
             val names = elementToBus.map(_("elementId"))
             Ok("Got: " + outString)

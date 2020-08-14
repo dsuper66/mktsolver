@@ -65,3 +65,10 @@ INFO: Unsupported notification method: $/setTraceNotification
 2020.08.14 18:58:32 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
 Aug 14, 2020 6:58:36 PM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
 INFO: Unsupported notification method: $/setTraceNotification
+Aug 14, 2020 6:58:43 PM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+Aug 14, 2020 6:58:45 PM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+2020.08.14 18:59:13 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+Aug 14, 2020 6:59:14 PM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
