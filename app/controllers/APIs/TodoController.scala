@@ -44,12 +44,12 @@ class TodoController @Inject() (
             // (json \ "elements").as[List[Map[String, String]]]
             
               val elements:Map[String, String] =
-            (json \ "elements").as[Map[String, String]]
+            (json \ "bus1").as[Map[String, String]]
 
             var outString = ""
             for ((element,bus) <- elements) outString += (s"element: $element, bus: $bus\n")
 
-            Ok("Got:\n" + outString)
+            Ok("Got bus1:\n" + outString)
         }
         .getOrElse {
           BadRequest("Expecting application/json request body")
