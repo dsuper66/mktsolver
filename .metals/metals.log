@@ -72,3 +72,63 @@ INFO: Unsupported notification method: $/setTraceNotification
 2020.08.14 18:59:13 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
 Aug 14, 2020 6:59:14 PM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
 INFO: Unsupported notification method: $/setTraceNotification
+Aug 14, 2020 6:59:27 PM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+Aug 14, 2020 7:00:58 PM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+2020.08.14 19:01:09 WARN  code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because it doesn't belong to a build target.
+2020.08.14 19:01:18 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+Aug 14, 2020 7:01:19 PM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+2020.08.14 19:05:27 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 19:13:18 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 19:16:41 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 19:17:20 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 19:18:38 WARN  code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because it doesn't belong to a build target.
+Aug 14, 2020 7:18:41 PM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+2020.08.14 19:19:53 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 19:22:18 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 19:24:01 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 19:25:27 WARN  code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because it doesn't belong to a build target.
+2020.08.14 19:25:27 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 19:29:47 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 19:30:02 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 19:34:29 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 19:38:27 WARN  code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because it doesn't belong to a build target.
+2020.08.14 19:39:14 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 19:41:30 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 19:41:57 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 19:43:29 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 19:45:55 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 19:46:21 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 19:47:22 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 19:48:14 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 19:56:47 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 19:57:22 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 19:59:30 WARN  code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because it doesn't belong to a build target.
+2020.08.14 20:01:42 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 20:02:43 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 20:40:06 WARN  code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because it doesn't belong to a build target.
+2020.08.14 20:40:14 WARN  code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because it doesn't belong to a build target.
+2020.08.14 20:40:16 WARN  code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because it doesn't belong to a build target.
+2020.08.14 20:42:04 WARN  code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because it doesn't belong to a build target.
+2020.08.14 20:42:04 WARN  code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because it doesn't belong to a build target.
+2020.08.14 20:44:06 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 20:46:14 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.14 21:38:13 WARN  code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because it doesn't belong to a build target.
+2020.08.14 21:38:13 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.15 10:44:15 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.15 10:45:34 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.15 10:46:32 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.15 10:48:05 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.15 10:48:28 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.15 10:49:20 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.15 10:50:42 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.15 11:18:33 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.15 11:18:59 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.15 11:21:36 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.15 11:22:18 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.15 11:22:24 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+Aug 15, 2020 11:32:47 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification

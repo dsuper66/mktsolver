@@ -17,13 +17,15 @@ class TodoController @Inject() (
       Ok(Json.toJson(todo))
     }
 
+    case class Element(elementId: String, bus: String)
+
   def solve =
     Action { request: Request[AnyContent] =>
       val body: AnyContent = request.body
       val jsonBody: Option[JsValue] = body.asJson
 
       // Expecting json body
-      jsonBody
+    //   jsonBody
         // .map { json =>
         //   val subCategories =
         //     (json \ "sub-categories").as[List[Map[String, String]]]
@@ -31,15 +33,23 @@ class TodoController @Inject() (
         //   val names = subCategories.map(_("elementId"))
         //   Ok("Got: " + names)
         // }
+
+        jsonBody
         .map { json =>
-            val elementToBus =
-                (json \ "elements").as[List[Map[String, String]]]
+            // val elementsToBus = Json.parse(json).as[Element]
+            // val map:Map[String, String] = json.asInstanceOf[Map[String, String]]
+            // var elementsToBus = jValue.extract[Element];
 
-            val outString: String = ""
-            for ((k,v) <- elementToBus) outString += ("key: %s, value: %s\n", k, v)
+            // val elements:List[Map[String, String]] =
+            // (json \ "elements").as[List[Map[String, String]]]
+            
+              val elements:Map[String, String] =
+            (json \ "elements").as[Map[String, String]]
 
-            val names = elementToBus.map(_("elementId"))
-            Ok("Got: " + outString)
+            var outString = ""
+            for ((element,bus) <- elements) outString += (s"element: $element, bus: $bus\n")
+
+            Ok("Got:\n" + outString)
         }
         .getOrElse {
           BadRequest("Expecting application/json request body")
