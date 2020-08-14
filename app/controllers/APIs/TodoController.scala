@@ -24,13 +24,22 @@ class TodoController @Inject() (
 
       // Expecting json body
       jsonBody
+        // .map { json =>
+        //   val subCategories =
+        //     (json \ "sub-categories").as[List[Map[String, String]]]
+
+        //   val names = subCategories.map(_("elementId"))
+        //   Ok("Got: " + names)
+        // }
+
         .map { json =>
           val subCategories =
-            (json \ "sub-categories").as[List[Map[String, String]]]
+            (json \ "elements").as[List[Map[String, String]]]
 
           val names = subCategories.map(_("elementId"))
           Ok("Got: " + names)
         }
+
         .getOrElse {
           BadRequest("Expecting application/json request body")
         }

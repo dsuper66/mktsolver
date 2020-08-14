@@ -8,3 +8,4 @@ target
 /RUNNING_PID
 .metals/metals.log
 .scalafmt.conf
+.metals/metals.log
