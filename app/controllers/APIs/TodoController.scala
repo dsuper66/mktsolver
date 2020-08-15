@@ -47,7 +47,7 @@ class TodoController @Inject() (
             (json \ "bus1").as[Map[String, String]]
 
             var outString = ""
-            for ((element,bus) <- elements) outString += (s"element: $element, bus: $bus\n")
+            for ((element,bus) <- elements) outString += (s"element: $element, bus1: $bus\n")
 
             Ok("Got bus1:\n" + outString)
         }
