@@ -7,7 +7,7 @@ import models.{Todo}
 // import scala.util.parsing.json._
 // import play.api.libs.json._
 // import spray.json._
-import DefaultJsonProtocol._
+// import DefaultJsonProtocol._
 
 class TodoController @Inject() (
     cc: ControllerComponents
