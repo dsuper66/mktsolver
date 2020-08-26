@@ -4,8 +4,10 @@ import javax.inject._
 import play.api.mvc._
 import play.api.libs.json._
 import models.{Todo}
-import scala.util.parsing.json._
-import play.api.libs.json._
+// import scala.util.parsing.json._
+// import play.api.libs.json._
+// import spray.json._
+import DefaultJsonProtocol._
 
 class TodoController @Inject() (
     cc: ControllerComponents
@@ -66,9 +68,10 @@ class TodoController @Inject() (
 
       jsonBody
         .map { json =>
-          val parsed = Json.parse(json)
+          val jsonAst = json.toString // or JsonParser(source)
 
-          Ok("Got data:\n" + parsed)
+
+          Ok("Got data:\n" + jsonAst)
         }
         .getOrElse {
           BadRequest("Expecting application/json request body")

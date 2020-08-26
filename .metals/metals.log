@@ -175,3 +175,98 @@ WARNING: Unmatched cancel notification for request id 521
 2020.08.26 18:54:39 WARN  code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because it doesn't belong to a build target.
 2020.08.26 18:55:04 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
 2020.08.26 18:55:10 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+2020.08.26 18:59:58 INFO  running '/Users/davidbullen/.sdkman/candidates/java/current/bin/java -Djline.terminal=jline.UnsupportedTerminal -Dsbt.log.noformat=true -Dfile.encoding=UTF-8 -jar /var/folders/wn/nvtl4fxd23zg51jwkr3jn6zm0000gn/T/metals1514553461098513844/sbt-launch.jar -Dbloop.export-jar-classifiers=sources bloopInstall'
+2020.08.26 19:00:01 INFO  [info] welcome to sbt 1.3.13 (AdoptOpenJDK Java 11.0.8)
+2020.08.26 19:00:04 INFO  [info] loading settings for project play-scala-seed-build-build-build from metals.sbt ...
+2020.08.26 19:00:04 INFO  [info] loading project definition from /Users/davidbullen/scala/play6/play-scala-seed/project/project/project
+2020.08.26 19:00:10 INFO  [warn] There may be incompatibilities among your library dependencies; run 'evicted' to see detailed eviction warnings.
+2020.08.26 19:00:10 INFO  [info] loading settings for project play-scala-seed-build-build from metals.sbt ...
+2020.08.26 19:00:11 INFO  [info] loading project definition from /Users/davidbullen/scala/play6/play-scala-seed/project/project
+2020.08.26 19:00:11 INFO  [warn] There may be incompatibilities among your library dependencies; run 'evicted' to see detailed eviction warnings.
+2020.08.26 19:00:16 INFO  [success] Generated .bloop/play-scala-seed-build-build.json
+2020.08.26 19:00:16 INFO  [success] Total time: 5 s, completed 26/08/2020, 7:00:16 PM
+2020.08.26 19:00:16 INFO  [info] loading settings for project play-scala-seed-build from plugins.sbt,metals.sbt ...
+2020.08.26 19:00:16 INFO  [info] loading project definition from /Users/davidbullen/scala/play6/play-scala-seed/project
+2020.08.26 19:00:18 INFO  [warn] There may be incompatibilities among your library dependencies; run 'evicted' to see detailed eviction warnings.
+2020.08.26 19:00:18 INFO  [success] Generated .bloop/play-scala-seed-build.json
+2020.08.26 19:00:18 INFO  [success] Total time: 1 s, completed 26/08/2020, 7:00:19 PM
+2020.08.26 19:00:20 INFO  [info] loading settings for project root from build.sbt ...
+2020.08.26 19:00:20 INFO  [info] set current project to play-scala-seed (in build file:/Users/davidbullen/scala/play6/play-scala-seed/)
+2020.08.26 19:00:23 INFO  [warn] There may be incompatibilities among your library dependencies; run 'evicted' to see detailed eviction warnings.
+2020.08.26 19:00:23 INFO  [warn] There may be incompatibilities among your library dependencies; run 'evicted' to see detailed eviction warnings.
+2020.08.26 19:00:23 INFO  [success] Generated .bloop/root.json
+2020.08.26 19:00:23 INFO  [success] Generated .bloop/root-test.json
+2020.08.26 19:00:23 INFO  [success] Total time: 3 s, completed 26/08/2020, 7:00:24 PM
+2020.08.26 19:00:23 INFO  build tool exit: 0
+2020.08.26 19:00:24 INFO  time: ran 'sbt bloopInstall' in 26s
+Starting the bsp launcher for bloop...
+Opening a bsp server connection with 'bsp --protocol local --socket /var/folders/wn/nvtl4fxd23zg51jwkr3jn6zm0000gn/T/bsp-launcher15084845618867356881/bsp.socket'...
+Waiting for the bsp connection to come up...
+[0m[32m[D][0m Loading 2 projects from '/Users/davidbullen/scala/play6/play-scala-seed/.bloop'...
+[0m[32m[D][0m Loading project from '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root.json'
+[0m[32m[D][0m Loading project from '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root-test.json'
+[0m[32m[D][0m Missing analysis file for project 'root'
+[0m[32m[D][0m Missing analysis file for project 'root-test'
+[0m[32m[D][0m Waiting for a connection at local:///var/folders/wn/nvtl4fxd23zg51jwkr3jn6zm0000gn/T/bsp-launcher15084845618867356881/bsp.socket...
+The server is listening for incoming connections at local:///var/folders/wn/nvtl4fxd23zg51jwkr3jn6zm0000gn/T/bsp-launcher15084845618867356881/bsp.socket...
+Starting thread that pumps stdin and redirects it to the bsp server...
+Starting thread that pumps server stdout and redirects it to the client stdout...
+2020.08.26 19:00:24 INFO  tracing is disabled for protocol BSP, to enable tracing of incoming and outgoing JSON messages create an empty file at /Users/davidbullen/Library/Caches/org.scalameta.metals/bsp.trace.json
+Starting the bsp launcher for bloop...
+Opening a bsp server connection with 'bsp --protocol local --socket /var/folders/wn/nvtl4fxd23zg51jwkr3jn6zm0000gn/T/bsp-launcher6098045837330218119/bsp.socket'...
+Starting the bsp launcher for bloop...
+Waiting for the bsp connection to come up...
+Opening a bsp server connection with 'bsp --protocol local --socket /var/folders/wn/nvtl4fxd23zg51jwkr3jn6zm0000gn/T/bsp-launcher15034551314318177060/bsp.socket'...
+Waiting for the bsp connection to come up...
+[0m[32m[D][0m Loading workspace settings from bloop.settings.json
+[0m[32m[D][0m Waiting for a connection at local:///var/folders/wn/nvtl4fxd23zg51jwkr3jn6zm0000gn/T/bsp-launcher15034551314318177060/bsp.socket...
+The server is listening for incoming connections at local:///var/folders/wn/nvtl4fxd23zg51jwkr3jn6zm0000gn/T/bsp-launcher15034551314318177060/bsp.socket...
+[0m[32m[D][0m Loading workspace settings from bloop.settings.json
+[0m[32m[D][0m Waiting for a connection at local:///var/folders/wn/nvtl4fxd23zg51jwkr3jn6zm0000gn/T/bsp-launcher6098045837330218119/bsp.socket...
+The server is listening for incoming connections at local:///var/folders/wn/nvtl4fxd23zg51jwkr3jn6zm0000gn/T/bsp-launcher6098045837330218119/bsp.socket...
+Starting thread that pumps stdin and redirects it to the bsp server...
+Starting thread that pumps server stdout and redirects it to the client stdout...
+Starting thread that pumps stdin and redirects it to the bsp server...
+Starting thread that pumps server stdout and redirects it to the client stdout...
+2020.08.26 19:00:25 INFO  tracing is disabled for protocol BSP, to enable tracing of incoming and outgoing JSON messages create an empty file at /Users/davidbullen/Library/Caches/org.scalameta.metals/bsp.trace.json
+2020.08.26 19:00:25 INFO  tracing is disabled for protocol BSP, to enable tracing of incoming and outgoing JSON messages create an empty file at /Users/davidbullen/Library/Caches/org.scalameta.metals/bsp.trace.json
+2020.08.26 19:00:28 INFO  time: connected to build server in 4.37s
+2020.08.26 19:00:28 INFO  Connected to Build server v1.4.3
+2020.08.26 19:00:35 INFO  time: indexed workspace in 6.18s
+2020.08.26 19:00:35 INFO  skipping build import with status 'Installed'
+2020.08.26 19:00:35 INFO  compiling root (11 scala sources and 2 java sources)
+2020.08.26 19:00:38 INFO  time: compiled root in 2.88s
+2020.08.26 19:00:48 INFO  compiling root (11 scala sources and 2 java sources)
+2020.08.26 19:00:48 INFO  time: compiled root in 0.66s
+2020.08.26 19:01:18 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-OH8QKrnSSDuN8nA-XFlDQw==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+2020.08.26 19:01:20 INFO  compiling root (11 scala sources and 2 java sources)
+2020.08.26 19:01:20 INFO  time: compiled root in 0.45s
+2020.08.26 19:01:25 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-OH8QKrnSSDuN8nA-XFlDQw==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+2020.08.26 19:01:26 INFO  compiling root (11 scala sources and 2 java sources)
+2020.08.26 19:01:26 INFO  time: compiled root in 0.5s
+2020.08.26 19:02:07 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-OH8QKrnSSDuN8nA-XFlDQw==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+2020.08.26 19:02:19 INFO  compiling root (11 scala sources and 2 java sources)
+2020.08.26 19:02:19 INFO  time: compiled root in 0.4s
+2020.08.26 19:02:51 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-OH8QKrnSSDuN8nA-XFlDQw==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+2020.08.26 19:02:58 INFO  compiling root (11 scala sources and 2 java sources)
+2020.08.26 19:02:58 INFO  time: compiled root in 0.4s
+2020.08.26 19:03:34 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-OH8QKrnSSDuN8nA-XFlDQw==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+2020.08.26 19:03:36 INFO  compiling root (11 scala sources and 2 java sources)
+2020.08.26 19:03:36 INFO  time: compiled root in 0.34s
+2020.08.26 19:03:58 INFO  compiling root (11 scala sources and 2 java sources)
+2020.08.26 19:03:58 INFO  time: compiled root in 0.42s
+2020.08.26 19:05:15 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-OH8QKrnSSDuN8nA-XFlDQw==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+2020.08.26 19:05:18 INFO  compiling root (11 scala sources and 2 java sources)
+2020.08.26 19:05:18 INFO  time: compiled root in 0.44s
+2020.08.26 19:06:32 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-OH8QKrnSSDuN8nA-XFlDQw==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+2020.08.26 19:06:36 INFO  compiling root (11 scala sources and 2 java sources)
+2020.08.26 19:06:36 INFO  time: compiled root in 0.29s
+2020.08.26 19:07:09 INFO  compiling root (11 scala sources and 2 java sources)
+2020.08.26 19:07:09 INFO  time: compiled root in 0.38s
+2020.08.26 19:07:47 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-OH8QKrnSSDuN8nA-XFlDQw==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+2020.08.26 19:07:47 INFO  compiling root (11 scala sources and 2 java sources)
+2020.08.26 19:07:47 INFO  time: compiled root in 0.56s
+2020.08.26 19:07:52 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-OH8QKrnSSDuN8nA-XFlDQw==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+2020.08.26 19:07:52 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-OH8QKrnSSDuN8nA-XFlDQw==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+2020.08.26 19:08:04 INFO  compiling root (11 scala sources and 2 java sources)
+2020.08.26 19:08:04 INFO  time: compiled root in 0.37s
