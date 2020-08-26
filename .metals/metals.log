@@ -349,3 +349,56 @@ WARNING: Unmatched cancel notification for request id 1466
 2020.08.26 20:21:23 INFO  time: compiled root in 0.13s
 2020.08.26 20:22:04 INFO  compiling root (11 scala sources and 2 java sources)
 2020.08.26 20:22:07 INFO  time: compiled root in 3.3s
+2020.08.26 20:28:34 INFO  compiling root (1 scala source)
+2020.08.26 20:28:34 INFO  time: compiled root in 0.41s
+2020.08.26 20:29:16 INFO  compiling root (1 scala source)
+2020.08.26 20:29:16 INFO  time: compiled root in 0.24s
+2020.08.26 20:33:51 INFO  compiling root (1 scala source)
+2020.08.26 20:33:51 INFO  time: compiled root in 0.25s
+2020.08.26 20:34:17 INFO  compiling root (1 scala source)
+2020.08.26 20:34:17 INFO  time: compiled root in 0.32s
+something's wrong: no file:///Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala in Map[String,String]RangePosition(file:///Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala, 1827, 1827, 1845)
+2020.08.26 20:35:09 INFO  compiling root (1 scala source)
+2020.08.26 20:35:09 INFO  time: compiled root in 0.29s
+2020.08.26 20:35:11 INFO  compiling root (1 scala source)
+2020.08.26 20:35:11 INFO  time: compiled root in 0.25s
+something's wrong: no file:///Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala in Map[String,String]RangePosition(file:///Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala, 1827, 1827, 1845)
+2020.08.26 20:35:25 INFO  compiling root (1 scala source)
+2020.08.26 20:35:25 INFO  time: compiled root in 0.29s
+2020.08.26 20:35:34 INFO  compiling root (1 scala source)
+2020.08.26 20:35:34 INFO  time: compiled root in 0.27s
+2020.08.26 20:36:31 INFO  compiling root (1 scala source)
+2020.08.26 20:36:31 INFO  time: compiled root in 0.3s
+2020.08.26 20:39:19 INFO  compiling root (1 scala source)
+2020.08.26 20:39:19 INFO  time: compiled root in 0.25s
+2020.08.26 20:40:50 INFO  compiling root (1 scala source)
+2020.08.26 20:40:50 INFO  time: compiled root in 0.3s
+2020.08.26 20:40:55 INFO  compiling root (1 scala source)
+2020.08.26 20:40:55 INFO  time: compiled root in 0.25s
+2020.08.26 20:41:00 INFO  compiling root (1 scala source)
+2020.08.26 20:41:00 INFO  time: compiled root in 0.26s
+2020.08.26 20:41:18 INFO  compiling root (1 scala source)
+2020.08.26 20:41:19 INFO  time: compiled root in 1.44s
+2020.08.26 20:42:08 INFO  compiling root (1 scala source)
+2020.08.26 20:42:08 INFO  time: compiled root in 0.27s
+2020.08.26 20:43:50 INFO  compiling root (1 scala source)
+2020.08.26 20:43:50 INFO  time: compiled root in 0.27s
+2020.08.26 21:46:28 INFO  compiling root (1 scala source)
+2020.08.26 21:46:28 INFO  time: compiled root in 0.52s
+2020.08.26 21:49:52 INFO  compiling root (1 scala source)
+2020.08.26 21:49:54 INFO  time: compiled root in 1.5s
+2020.08.26 21:54:39 INFO  compiling root (1 scala source)
+2020.08.26 21:54:39 INFO  time: compiled root in 0.26s
+2020.08.26 21:55:28 INFO  compiling root (1 scala source)
+2020.08.26 21:55:28 INFO  time: compiled root in 0.29s
+2020.08.26 21:57:32 INFO  compiling root (1 scala source)
+2020.08.26 21:57:32 INFO  time: compiled root in 0.31s
+2020.08.26 21:57:38 INFO  compiling root (1 scala source)
+2020.08.26 21:57:38 INFO  time: compiled root in 0.34s
+2020.08.26 21:57:41 INFO  compiling root (1 scala source)
+2020.08.26 21:57:41 INFO  time: compiled root in 0.27s
+something's wrong: no file:///Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala in Map[String,String]RangePosition(file:///Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala, 1830, 1830, 1848)
+2020.08.26 22:03:48 INFO  compiling root-test (1 scala source)
+2020.08.26 22:03:50 INFO  time: compiled root-test in 1.1s
+2020.08.26 22:04:12 INFO  compiling root (1 scala source)
+2020.08.26 22:04:14 INFO  time: compiled root in 1.31s

@@ -61,6 +61,19 @@ class TodoController @Inject() (
         }
     }
 
+
+      case class ModelElement(
+        elementId: String,
+        elementTypeId: String,
+        // properties: Map[String,String])
+        properties: String)        
+
+      case class ModelElements(modelElements: Seq[ModelElement])
+      
+      object ModelElement {
+        implicit val reads = Json.reads[ModelElement]
+      }  
+    
   def solve2 =
     Action { request: Request[AnyContent] =>
       val body: AnyContent = request.body
@@ -68,15 +81,19 @@ class TodoController @Inject() (
 
       jsonBody
         .map { json =>
+ 
+          val outString = (json \"elements" ).as[Seq[ModelElement]]
 
-          val elements: Map[String, String] =
-            (json \ "elements").as[Map[String,String]]
-          // val jsonAst = json.toString // or JsonParser(source)
+          // Json.parse(s).as[Seq[ModelElement]]
+
+          // // val elements: Map[String, Element] =
+          // //   (json \ "elements").as[Map[String,Element]]
+          // // // val jsonAst = json.toString // or JsonParser(source)
       
 
-          var outString = ""
-          for ((element, arrayOfProperties) <- elements)
-            outString += (s"element: $element\n")
+          // // var outString = ""
+          // // for ((element, arrayOfProperties) <- elements)
+          // //   outString += (s"element: $element\n")
 
 
           Ok("Got data:\n" + outString)
