@@ -70,7 +70,7 @@ class TodoController @Inject() (
         .map { json =>
 
           val elements: Map[String, String] =
-            (json \ "elements").as[Map[String, Any]]
+            (json \ "elements").as[Map[String,String]]
           // val jsonAst = json.toString // or JsonParser(source)
       
 
