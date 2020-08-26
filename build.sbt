@@ -10,7 +10,7 @@ scalaVersion := "2.13.3"
 libraryDependencies += guice
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
 
-libraryDependencies += "io.spray" %%  "spray-json" % "1.3.5"
+// libraryDependencies += "io.spray" %%  "spray-json" % "1.3.5"
 
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "com.example.controllers._"
