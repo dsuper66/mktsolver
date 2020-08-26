@@ -402,3 +402,5 @@ something's wrong: no file:///Users/davidbullen/scala/play6/play-scala-seed/app/
 2020.08.26 22:03:50 INFO  time: compiled root-test in 1.1s
 2020.08.26 22:04:12 INFO  compiling root (1 scala source)
 2020.08.26 22:04:14 INFO  time: compiled root in 1.31s
+2020.08.26 22:18:35 INFO  compiling root (1 scala source)
+2020.08.26 22:18:37 INFO  time: compiled root in 1.34s

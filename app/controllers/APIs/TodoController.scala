@@ -65,8 +65,8 @@ class TodoController @Inject() (
       case class ModelElement(
         elementId: String,
         elementTypeId: String,
-        // properties: Map[String,String])
-        properties: String)        
+        properties: Map[String,String])
+        // properties: String)        
 
       case class ModelElements(modelElements: Seq[ModelElement])
       
