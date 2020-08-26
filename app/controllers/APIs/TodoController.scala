@@ -68,10 +68,18 @@ class TodoController @Inject() (
 
       jsonBody
         .map { json =>
-          val jsonAst = json.toString // or JsonParser(source)
+
+          val elements: Map[String, String] =
+            (json \ "elements").as[Map[String, Any]]
+          // val jsonAst = json.toString // or JsonParser(source)
+      
+
+          var outString = ""
+          for ((element, arrayOfProperties) <- elements)
+            outString += (s"element: $element\n")
 
 
-          Ok("Got data:\n" + jsonAst)
+          Ok("Got data:\n" + outString)
         }
         .getOrElse {
           BadRequest("Expecting application/json request body")

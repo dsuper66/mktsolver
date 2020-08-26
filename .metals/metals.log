@@ -339,3 +339,7 @@ Starting thread that pumps server stdout and redirects it to the client stdout..
 2020.08.26 19:13:10 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-C2yvHStiRQ-BP3GY4w3eXA==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
 2020.08.26 19:13:12 INFO  compiling root (11 scala sources and 2 java sources)
 2020.08.26 19:13:16 INFO  time: compiled root in 4.39s
+Aug 26, 2020 8:17:06 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 1466
+2020.08.26 20:20:02 INFO  compiling root (1 scala source)
+2020.08.26 20:20:02 INFO  time: compiled root in 0.54s
