@@ -147,3 +147,19 @@ INFO: Unsupported notification method: $/setTraceNotification
 2020.08.15 11:56:23 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
 Aug 15, 2020 11:56:24 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
 INFO: Unsupported notification method: $/setTraceNotification
+Aug 15, 2020 12:24:24 PM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+Aug 15, 2020 12:24:26 PM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+2020.08.16 16:36:59 INFO  shutting down Metals
+2020.08.26 17:23:02 INFO  started: Metals version 0.9.3 in workspace '/Users/davidbullen/scala/play6/play-scala-seed' for client vscode.
+2020.08.26 17:23:03 INFO  time: initialize in 1.12s
+2020.08.26 17:23:04 INFO  no build target: using presentation compiler with only scala-library
+2020.08.26 17:23:04 INFO  skipping build import with status 'Requested'
+2020.08.26 17:23:06 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+Aug 26, 2020 5:24:04 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 49
+2020.08.26 17:25:15 WARN  code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because it doesn't belong to a build target.
+2020.08.26 17:26:02 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
+Aug 26, 2020 5:26:05 PM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
