@@ -163,3 +163,8 @@ WARNING: Unmatched cancel notification for request id 49
 2020.08.26 17:26:02 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala
 Aug 26, 2020 5:26:05 PM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
 INFO: Unsupported notification method: $/setTraceNotification
+2020.08.26 17:30:44 WARN  code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because it doesn't belong to a build target.
+Aug 26, 2020 5:34:38 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 521
+2020.08.26 18:45:35 WARN  code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because it doesn't belong to a build target.
+2020.08.26 18:45:39 WARN  no build target for: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala

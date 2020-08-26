@@ -17,7 +17,7 @@ class TodoController @Inject() (
       Ok(Json.toJson(todo))
     }
 
-    case class Element(elementId: String, bus: String)
+  case class Element(elementId: String, bus: String)
 
   def solve =
     Action { request: Request[AnyContent] =>
@@ -25,32 +25,48 @@ class TodoController @Inject() (
       val jsonBody: Option[JsValue] = body.asJson
 
       // Expecting json body
-    //   jsonBody
-        // .map { json =>
-        //   val subCategories =
-        //     (json \ "sub-categories").as[List[Map[String, String]]]
+      //   jsonBody
+      // .map { json =>
+      //   val subCategories =
+      //     (json \ "sub-categories").as[List[Map[String, String]]]
 
-        //   val names = subCategories.map(_("elementId"))
-        //   Ok("Got: " + names)
-        // }
+      //   val names = subCategories.map(_("elementId"))
+      //   Ok("Got: " + names)
+      // }
 
-        jsonBody
+      jsonBody
         .map { json =>
-            // val elementsToBus = Json.parse(json).as[Element]
-            // val map:Map[String, String] = json.asInstanceOf[Map[String, String]]
-            // var elementsToBus = jValue.extract[Element];
+          // val elementsToBus = Json.parse(json).as[Element]
+          // val map:Map[String, String] = json.asInstanceOf[Map[String, String]]
+          // var elementsToBus = jValue.extract[Element];
 
-            // val elements:List[Map[String, String]] =
-            // (json \ "elements").as[List[Map[String, String]]]
-            
-          val elements:Map[String, String] =
-            (json \ "elements").as[Map[String, String]]
+          // val elements:List[Map[String, String]] =
+          // (json \ "elements").as[List[Map[String, String]]]
 
-            var outString = ""
-            for ((element,bus) <- elements) 
-              outString += (s"element: $element, bus1: $bus\n")
+          val elements: Map[String, String] =
+            (json \ "bus1").as[Map[String, String]]
 
-            Ok("Got bus1:\n" + elements)
+          var outString = ""
+          for ((element, bus) <- elements)
+            outString += (s"element: $element, bus1: $bus\n")
+
+          Ok("Got bus1:\n" + outString)
+        }
+        .getOrElse {
+          BadRequest("Expecting application/json request body")
+        }
+    }
+
+  def solve2 =
+    Action { request: Request[AnyContent] =>
+      val body: AnyContent = request.body
+      val jsonBody: Option[JsValue] = body.asJson
+
+      jsonBody
+        .map { json =>
+          val parsed = JSON.parseFull(json)
+
+          Ok("Got bus1:\n" + parsed)
         }
         .getOrElse {
           BadRequest("Expecting application/json request body")
