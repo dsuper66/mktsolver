@@ -476,3 +476,23 @@ Starting thread that pumps server stdout and redirects it to the client stdout..
 2020.08.27 17:39:25 INFO  Connected to Build server v1.4.3-23-550c6c0a
 2020.08.27 17:39:25 INFO  time: imported build in 0.12s
 2020.08.27 17:39:26 INFO  time: indexed workspace in 1.78s
+2020.08.27 19:56:17 INFO  compiling root (1 scala source)
+2020.08.27 19:56:20 INFO  time: compiled root in 2.74s
+2020.08.27 19:58:18 ERROR scalafmt: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala:131: error: } expected but end of file found
+
+^
+2020.08.27 19:58:26 ERROR scalafmt: /Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala:131: error: } expected but end of file found
+
+^
+2020.08.27 20:04:40 INFO  compiling root (1 scala source)
+2020.08.27 20:04:40 INFO  time: compiled root in 0.2s
+2020.08.27 20:05:00 INFO  compiling root (1 scala source)
+2020.08.27 20:05:00 INFO  time: compiled root in 0.65s
+2020.08.27 20:05:47 INFO  compiling root (1 scala source)
+2020.08.27 20:05:47 INFO  time: compiled root in 0.46s
+2020.08.27 20:08:38 INFO  compiling root (1 scala source)
+2020.08.27 20:08:38 INFO  time: compiled root in 0.48s
+2020.08.27 20:09:34 INFO  compiling root (1 scala source)
+2020.08.27 20:09:34 INFO  time: compiled root in 0.45s
+2020.08.27 20:09:58 INFO  compiling root (1 scala source)
+2020.08.27 20:10:00 INFO  time: compiled root in 2.75s
