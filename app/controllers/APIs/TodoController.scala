@@ -146,12 +146,12 @@ class TodoController @Inject() (
           // // for ((element, arrayOfProperties) <- elements)
           // //   outString += (s"element: $element\n")
 
-          Ok("Got data:\n" + outString)
-            .withHeader(ACCESS_CONTROL_ALLOW_HEADERS, "*")
+          Ok("Got data:\n" + outString)            
         }
         .getOrElse {
           BadRequest("Expecting application/json request body")
         }
+        .withHeader(ACCESS_CONTROL_ALLOW_HEADERS, "*")
     }
 
 }
