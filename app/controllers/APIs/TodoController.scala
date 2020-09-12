@@ -129,8 +129,6 @@ class TodoController @Inject() (
 
       val body: AnyContent = request.body
       val jsonBody: Option[JsValue] = body.asJson
-
-                Ok("Got here")
                 
       jsonBody
         .map { json =>
