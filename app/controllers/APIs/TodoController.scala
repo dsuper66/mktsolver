@@ -147,7 +147,6 @@ class TodoController @Inject() (
           // //   outString += (s"element: $element\n")
 
           Ok("Got data:\n" + outString)
-            .as(MimeTypes.HTML)
             .withHeader(ACCESS_CONTROL_ALLOW_HEADERS, "*")
         }
         .getOrElse {
