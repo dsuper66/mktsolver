@@ -16,4 +16,5 @@ GET     /api/todos                  controllers.api.TodoController.getAll
 #  api controllers mapping
 POST     /api/solve                 controllers.api.TodoController.solve2
 
-OPTIONS /api/solve controllers.HomeController.options
+
+#OPTIONS /api/solve controllers.HomeController.options
