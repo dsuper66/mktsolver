@@ -98,7 +98,6 @@ class TodoController @Inject() (
 
   object ModelElement {
 
-
     implicit val readsMap =
       Reads[Map[String, Any]](m => Reads.mapReads[Any](anyReads).reads(m))
     val anyReads = Reads[Any](m => metaValueToJsValue(m))
@@ -126,9 +125,8 @@ class TodoController @Inject() (
 
   def solve2 =
     Action { request: Request[AnyContent] =>
-
       // response().setHeader(CACHE_CONTROL, "max-age=3600");
-      
+
       val body: AnyContent = request.body
       val jsonBody: Option[JsValue] = body.asJson
 
@@ -146,13 +144,27 @@ class TodoController @Inject() (
           // // for ((element, arrayOfProperties) <- elements)
           // //   outString += (s"element: $element\n")
 
-          Ok("Got data 2:\n" + outString)            
+          Ok("Got data 2:\n" + outString)
         }
         .getOrElse {
           BadRequest("Expecting application/json request body")
         }
         .withHeaders(ACCESS_CONTROL_ALLOW_HEADERS -> "*")
-        
+
+    }
+
+  def headers =
+    List(
+      "Access-Control-Allow-Origin" -> "*",
+      "Access-Control-Allow-Methods" -> "GET, POST, OPTIONS, DELETE, PUT",
+      "Access-Control-Max-Age" -> "3600",
+      "Access-Control-Allow-Headers" -> "Origin, Content-Type, Accept, Authorization",
+      "Access-Control-Allow-Credentials" -> "true"
+    )
+
+  def options =
+    Action { request =>
+      NoContent.withHeaders(headers: _*)
     }
 
 }
