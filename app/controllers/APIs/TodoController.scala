@@ -131,7 +131,7 @@ class TodoController @Inject() (
       val jsonBody: Option[JsValue] = body.asJson
 
                 Ok("Got here")
-                return
+                
       jsonBody
         .map { json =>
           val outString = (json \ "elements").as[Seq[ModelElement]]
