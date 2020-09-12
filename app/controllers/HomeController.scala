@@ -24,4 +24,17 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)
       Ok(views.html.index())
     }
 
+  def headers =
+    List(
+      "Access-Control-Allow-Origin" -> "*",
+      "Access-Control-Allow-Methods" -> "GET, POST, OPTIONS, DELETE, PUT",
+      "Access-Control-Max-Age" -> "3600",
+      "Access-Control-Allow-Headers" -> "Origin, Content-Type, Accept, Authorization",
+      "Access-Control-Allow-Credentials" -> "true"
+    )
+
+  def options =
+    Action { request =>
+      NoContent.withHeaders(headers: _*)
+    }
 }

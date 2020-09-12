@@ -144,7 +144,7 @@ class TodoController @Inject() (
           // // for ((element, arrayOfProperties) <- elements)
           // //   outString += (s"element: $element\n")
 
-          Ok("Got data 2:\n" + outString)
+          Ok("Got data 3:\n" + outString)
         }
         .getOrElse {
           BadRequest("Expecting application/json request body")
@@ -153,18 +153,6 @@ class TodoController @Inject() (
 
     }
 
-  def headers =
-    List(
-      "Access-Control-Allow-Origin" -> "*",
-      "Access-Control-Allow-Methods" -> "GET, POST, OPTIONS, DELETE, PUT",
-      "Access-Control-Max-Age" -> "3600",
-      "Access-Control-Allow-Headers" -> "Origin, Content-Type, Accept, Authorization",
-      "Access-Control-Allow-Credentials" -> "true"
-    )
 
-  def options =
-    Action { request =>
-      NoContent.withHeaders(headers: _*)
-    }
 
 }
