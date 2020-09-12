@@ -151,7 +151,7 @@ class TodoController @Inject() (
         .getOrElse {
           BadRequest("Expecting application/json request body")
         }
-        .withHeaders(ACCESS_CONTROL_ALLOW_HEADERS, "*")
+        .withHeaders(ACCESS_CONTROL_ALLOW_HEADERS, '*')
         
     }
 
