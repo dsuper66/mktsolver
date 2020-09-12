@@ -127,9 +127,8 @@ class TodoController @Inject() (
   def solve2 =
     Action { request: Request[AnyContent] =>
 
-
       // response().setHeader(CACHE_CONTROL, "max-age=3600");
-      response().setHeader("Access-Control-Allow-Origin", "*");
+      
       val body: AnyContent = request.body
       val jsonBody: Option[JsValue] = body.asJson
 
@@ -148,6 +147,8 @@ class TodoController @Inject() (
           // //   outString += (s"element: $element\n")
 
           Ok("Got data:\n" + outString)
+            .as(MimeTypes.HTML)
+            .withHeader(ACCESS_CONTROL_ALLOW_HEADERS, "*")
         }
         .getOrElse {
           BadRequest("Expecting application/json request body")
