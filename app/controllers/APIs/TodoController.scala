@@ -130,6 +130,8 @@ class TodoController @Inject() (
       val body: AnyContent = request.body
       val jsonBody: Option[JsValue] = body.asJson
 
+                Ok("Got here")
+                return
       jsonBody
         .map { json =>
           val outString = (json \ "elements").as[Seq[ModelElement]]
@@ -144,8 +146,7 @@ class TodoController @Inject() (
           // // for ((element, arrayOfProperties) <- elements)
           // //   outString += (s"element: $element\n")
 
-          Ok("Got here")
-          // Ok("Got data 3:\n" + outString)
+          Ok("Got data 3:\n" + outString)
         }
         .getOrElse {
           BadRequest("Expecting application/json request body")
