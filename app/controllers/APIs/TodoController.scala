@@ -87,19 +87,74 @@ class TodoController @Inject() (
 //     }
 //   }
 
+//A Scala Case Class is like a regular class, except it is good for modeling immutable data
   case class ModelElement(
       elementId: String,
       elementTypeId: String,
       properties: Map[String, Any]
   )
-  // properties: String)
-
   case class ModelElements(modelElements: Seq[ModelElement])
+
+  case class ConstraintDef(
+      constraintId: String,
+      elementType: String,
+      varType: String,
+      inEquality: String,
+      rhsProperty: String,
+      rhsValue: Double
+  )
+
+  case class ConstraintComp(
+      constraintId: String,
+      elementType: String,
+      propertyMapToParent: String,
+      varType: String,
+      multParentProperty: String,
+      multValue: Double
+  )
+
+// For example, the type Int => String, is equivalent to
+// the type Function1[Int,String] i.e. a function that takes an argument of type Int and returns a String.
+// scala> val f: Function1[Int,String] = myInt => "my int: "+myInt.toString
+
+// The final parameter list on a method can be marked implicit,
+// which means the values will be taken from the context in which they are called
+
+// An object with the same name as a class is called a companion object.
+// Conversely, the class is the object’s companion class.
+//A companion class or object can access the private members of its companion.
+// Use a companion object for methods and values which are not specific to instances of the companion class.
+//The companion object can also contain factory methods
+
+//Play Reads converters are used to convert from a JsValue to another type.
+
+// What's a Reads? It's just a trait that defines how a JsValue
+// (the play class encapsulating JSON values) should be deserialized from JSON to some type.
+// The trait only requires one method to be implemented, a reads method which
+// takes in some json and returns a JsResult of some type.
+
+// Here [A] is the type parameter for function findKth. Now what does type parameter mean?
+// Type parameter tells the compiler that method findKth can take parameter of type A.
+// Which is the generic type here because A can be anything.
+// For example A can be Int, Double, another List -- anything.
+
+//https://stackoverflow.com/questions/25741162/scala-reads-how-to-handle-optionmapstring-any
+
+//mapReads... Deserializer for a `Map[String,V]`
+  // implicit def mapReads[V](implicit fmtv: Reads[V]): Reads[Map[String, V]] =
+  //   mapReads[String, V](JsSuccess(_))
+
+  /**
+    * Convert the JsValue into a A
+    */
+  // def reads(json: JsValue): JsResult[A]
 
   object ModelElement {
 
+    //Reads looks for this implicit which tells it how to read [String,Any]
     implicit val readsMap =
       Reads[Map[String, Any]](m => Reads.mapReads[Any](anyReads).reads(m))
+
     val anyReads = Reads[Any](m => metaValueToJsValue(m))
 
     def metaValueToJsValue(m: JsValue): JsResult[Any] = {
@@ -120,8 +175,30 @@ class TodoController @Inject() (
       }
     }
 
+    //Json deserialiser for ModelElement (and needs to be after the above implicit for Reads)
     implicit val reads = Json.reads[ModelElement]
   }
+
+  object ConstraintDef {
+    //need Json deserializer for type
+    implicit val reads = Json.reads[ConstraintDef]
+  }
+
+  object ConstraintComp {
+    //need Json deserializer for type
+    implicit val reads = Json.reads[ConstraintComp]
+  }  
+
+  //A Play Action is a function that handles a request and generates a result to be sent to the client.
+  //In Scala, a List inherits from Seq, but implements Product
+
+  /**
+    * Tries to convert the node into a T, throwing an exception if it can't. An implicit Reads[T] must be defined.
+    */
+  // def as[T](implicit fjs: Reads[T]): T = validate(fjs).fold(
+  //   valid = identity,
+  //   invalid = e => throw JsResultException(e)
+  // )
 
   def solve2 =
     Action { request: Request[AnyContent] =>
@@ -129,11 +206,14 @@ class TodoController @Inject() (
 
       val body: AnyContent = request.body
       val jsonBody: Option[JsValue] = body.asJson
-                
+
       jsonBody
         .map { json =>
           val outString = (json \ "elements").as[Seq[ModelElement]]
 
+          val outString2 = (json \ "constraintDefs").as[Seq[ConstraintDef]]
+
+          val outString3 = (json \ "constraintComps").as[Seq[ConstraintComp]]
           // Json.parse(s).as[Seq[ModelElement]]
 
           // // val elements: Map[String, Element] =
@@ -144,7 +224,7 @@ class TodoController @Inject() (
           // // for ((element, arrayOfProperties) <- elements)
           // //   outString += (s"element: $element\n")
 
-          Ok("SCALA data:\n" + outString)
+          Ok("SCALA data:\n" + outString + "\n\n\n" + outString2 + "\n\n\n" + outString3)
         }
         .getOrElse {
           BadRequest("Expecting application/json request body")
@@ -152,7 +232,5 @@ class TodoController @Inject() (
         .withHeaders(ACCESS_CONTROL_ALLOW_HEADERS -> "*")
 
     }
-
-
 
 }

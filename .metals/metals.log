@@ -1059,3 +1059,83 @@ java.lang.RuntimeException: The server did not start, got FailedToOpenBspConnect
 2020.09.12 22:06:55 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-ExZwFwWbTASil3zh0HUejA==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
 2020.09.12 22:19:47 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-ExZwFwWbTASil3zh0HUejA==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
 2020.09.13 10:46:21 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-ExZwFwWbTASil3zh0HUejA==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+Sep 18, 2020 2:54:05 PM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+2020.09.19 22:26:56 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-ExZwFwWbTASil3zh0HUejA==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+Sep 19, 2020 10:26:58 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 1040
+Sep 19, 2020 10:27:27 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 1045
+2020.09.19 22:38:09 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-ExZwFwWbTASil3zh0HUejA==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+2020.09.20 09:16:22 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-ExZwFwWbTASil3zh0HUejA==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+Sep 20, 2020 9:38:37 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 1339
+2020.09.20 10:19:11 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-ExZwFwWbTASil3zh0HUejA==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+Sep 20, 2020 10:25:42 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 1536
+Sep 20, 2020 10:26:16 AM scala.meta.internal.pc.CompilerAccess handleError
+SEVERE: null
+java.lang.NullPointerException
+	at java.base/java.util.Arrays.sort(Arrays.java:1441)
+	at scala.tools.nsc.classpath.JFileDirectoryLookup.listChildren(DirectoryClassPath.scala:118)
+	at scala.tools.nsc.classpath.JFileDirectoryLookup.listChildren$(DirectoryClassPath.scala:102)
+	at scala.tools.nsc.classpath.DirectoryClassPath.listChildren(DirectoryClassPath.scala:291)
+	at scala.tools.nsc.classpath.DirectoryClassPath.listChildren(DirectoryClassPath.scala:291)
+	at scala.tools.nsc.classpath.DirectoryLookup.list(DirectoryClassPath.scala:83)
+	at scala.tools.nsc.classpath.DirectoryLookup.list$(DirectoryClassPath.scala:78)
+	at scala.tools.nsc.classpath.DirectoryClassPath.list(DirectoryClassPath.scala:291)
+	at scala.tools.nsc.classpath.AggregateClassPath.$anonfun$list$3(AggregateClassPath.scala:106)
+	at scala.collection.immutable.Vector.foreach(Vector.scala:1856)
+	at scala.tools.nsc.classpath.AggregateClassPath.list(AggregateClassPath.scala:102)
+	at scala.tools.nsc.util.ClassPath.list(ClassPath.scala:35)
+	at scala.tools.nsc.util.ClassPath.list$(ClassPath.scala:35)
+	at scala.tools.nsc.classpath.AggregateClassPath.list(AggregateClassPath.scala:31)
+	at scala.tools.nsc.symtab.SymbolLoaders$PackageLoader.doComplete(SymbolLoaders.scala:296)
+	at scala.tools.nsc.symtab.SymbolLoaders$SymbolLoader.$anonfun$complete$2(SymbolLoaders.scala:248)
+	at scala.tools.nsc.symtab.SymbolLoaders$SymbolLoader.complete(SymbolLoaders.scala:246)
+	at scala.reflect.internal.Symbols$Symbol.completeInfo(Symbols.scala:1546)
+	at scala.reflect.internal.Symbols$Symbol.info(Symbols.scala:1518)
+	at scala.reflect.internal.Types$TypeRef.decls(Types.scala:2609)
+	at scala.tools.nsc.typechecker.Namers$Namer.enterPackage(Namers.scala:765)
+	at scala.tools.nsc.typechecker.Namers$Namer.dispatch$1(Namers.scala:289)
+	at scala.tools.nsc.typechecker.Namers$Namer.standardEnterSym(Namers.scala:302)
+	at scala.tools.nsc.typechecker.AnalyzerPlugins.pluginsEnterSym(AnalyzerPlugins.scala:478)
+	at scala.tools.nsc.typechecker.AnalyzerPlugins.pluginsEnterSym$(AnalyzerPlugins.scala:477)
+	at scala.meta.internal.pc.MetalsGlobal$MetalsInteractiveAnalyzer.pluginsEnterSym(MetalsGlobal.scala:58)
+	at scala.tools.nsc.typechecker.Namers$Namer.enterSym(Namers.scala:280)
+	at scala.tools.nsc.typechecker.Analyzer$namerFactory$$anon$1.apply(Analyzer.scala:51)
+	at scala.tools.nsc.Global$GlobalPhase.applyPhase(Global.scala:454)
+	at scala.tools.nsc.Global$Run.$anonfun$compileLate$2(Global.scala:1656)
+	at scala.tools.nsc.Global$Run.$anonfun$compileLate$2$adapted(Global.scala:1655)
+	at scala.collection.IterableOnceOps.foreach(IterableOnce.scala:553)
+	at scala.collection.IterableOnceOps.foreach$(IterableOnce.scala:551)
+	at scala.collection.AbstractIterator.foreach(Iterator.scala:1279)
+	at scala.tools.nsc.Global$Run.compileLate(Global.scala:1655)
+	at scala.tools.nsc.interactive.Global.parseAndEnter(Global.scala:657)
+	at scala.tools.nsc.interactive.Global.typedTreeAt(Global.scala:803)
+	at scala.tools.nsc.interactive.Global.typedTreeAt(Global.scala:799)
+	at scala.meta.internal.pc.SignatureHelpProvider.signatureHelp(SignatureHelpProvider.scala:25)
+
+2020.09.20 10:29:06 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-ExZwFwWbTASil3zh0HUejA==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+2020.09.20 11:13:29 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-ExZwFwWbTASil3zh0HUejA==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+Sep 20, 2020 11:13:30 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 1702
+2020.09.20 11:30:02 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-ExZwFwWbTASil3zh0HUejA==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+Sep 20, 2020 11:47:25 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 2105
+Sep 20, 2020 11:53:23 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+Sep 20, 2020 11:53:23 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+Sep 20, 2020 11:54:05 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+Sep 20, 2020 11:54:05 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+2020.09.20 12:04:37 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-ExZwFwWbTASil3zh0HUejA==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+2020.09.20 14:15:50 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-ExZwFwWbTASil3zh0HUejA==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+2020.09.20 14:15:50 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-ExZwFwWbTASil3zh0HUejA==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+2020.09.20 14:15:53 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-ExZwFwWbTASil3zh0HUejA==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+2020.09.20 14:15:53 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-ExZwFwWbTASil3zh0HUejA==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+2020.09.20 15:28:38 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-ExZwFwWbTASil3zh0HUejA==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+Sep 20, 2020 4:39:41 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 3079
