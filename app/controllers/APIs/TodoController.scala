@@ -217,8 +217,7 @@ class TodoController @Inject() (
 
           var msg = ""
           for (constraintDef <- constraintDefs) {
-            for (modelElement <- modelElements.filter(
-              modeElement => modelElement.elementType == constraintDef.elementType)){
+            for (modelElement <- modelElements.filter(_.elementType == constraintDef.elementType)){
                 msg += modelElement.elementId + " has a " + constraintDef.constraintId + "..."
               }
           }
