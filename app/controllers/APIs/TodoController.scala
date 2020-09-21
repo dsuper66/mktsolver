@@ -228,7 +228,7 @@ class TodoController @Inject() (
           // // for ((element, arrayOfProperties) <- elements)
           // //   outString += (s"element: $element\n")
 
-          Ok("SCALA data:\n" + modelElements + "\n" + "<br />====" + constraintDefs + "\n"  + "====" + constraintComps)
+          Ok("SCALA data:\n" + modelElements + "\r\n \r\n" + "====" + constraintDefs + "\n"  + "====" + constraintComps)
         }
         .getOrElse {
           BadRequest("Expecting application/json request body")
