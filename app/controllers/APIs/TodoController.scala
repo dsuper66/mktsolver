@@ -209,11 +209,15 @@ class TodoController @Inject() (
 
       jsonBody
         .map { json =>
-          val outString = (json \ "elements").as[Seq[ModelElement]]
+          val modelElements = (json \ "elements").as[Seq[ModelElement]]
 
-          val outString2 = (json \ "constraintDefs").as[Seq[ConstraintDef]]
+          val constraintDefs = (json \ "constraintDefs").as[Seq[ConstraintDef]]
 
-          val outString3 = (json \ "constraintComps").as[Seq[ConstraintComp]]
+          val constraintComps = (json \ "constraintComps").as[Seq[ConstraintComp]]
+
+          for (constraintDef <- constraintDefs) {
+            
+          }
           // Json.parse(s).as[Seq[ModelElement]]
 
           // // val elements: Map[String, Element] =
@@ -224,7 +228,7 @@ class TodoController @Inject() (
           // // for ((element, arrayOfProperties) <- elements)
           // //   outString += (s"element: $element\n")
 
-          Ok("SCALA data:\n" + outString + "\n" + "====" + outString2 + "\n"  + "====" + outString3)
+          Ok("SCALA data:\n" + modelElements + "\n" + "<br />====" + constraintDefs + "\n"  + "====" + constraintComps)
         }
         .getOrElse {
           BadRequest("Expecting application/json request body")
