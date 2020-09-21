@@ -218,7 +218,11 @@ class TodoController @Inject() (
           var msg = ""
           for (constraintDef <- constraintDefs) {
             for (modelElement <- modelElements.filter(_.elementType == constraintDef.elementType)){
-                msg += modelElement.elementId + " has a " + constraintDef.constraintId + "..."
+                msg += modelElement.elementId + " has constraint: " + constraintDef.constraintId + "="
+
+                for (constraintComp <- constraintComps) {
+                  msg += constraintComp.elementType + "." + constraintComp.propertyMapToParent + "..."
+                }
               }
           }
           // Json.parse(s).as[Seq[ModelElement]]
