@@ -90,7 +90,7 @@ class TodoController @Inject() (
 //A Scala Case Class is like a regular class, except it is good for modeling immutable data
   case class ModelElement(
       elementId: String,
-      elementTypeId: String,
+      elementType: String,
       properties: Map[String, Any]
   )
   case class ModelElements(modelElements: Seq[ModelElement])
@@ -215,8 +215,12 @@ class TodoController @Inject() (
 
           val constraintComps = (json \ "constraintComps").as[Seq[ConstraintComp]]
 
+          var msg = ""
           for (constraintDef <- constraintDefs) {
-            
+            for (modelElement <- modelElements.filter(
+              modeElement => modelElement.elementType == constraintDef.elementType)){
+                msg += modelElement.elementId + " has a " + constraintDef.constraintId + "..."
+              }
           }
           // Json.parse(s).as[Seq[ModelElement]]
 
@@ -228,7 +232,8 @@ class TodoController @Inject() (
           // // for ((element, arrayOfProperties) <- elements)
           // //   outString += (s"element: $element\n")
 
-          Ok("SCALA data:\n" + modelElements + "\r\n \r\n" + "====" + constraintDefs + "\n"  + "====" + constraintComps)
+          Ok("SCALA data:\n" + modelElements + "\r\n \r\n" 
+            + "====" + constraintDefs + "\n"  + "====" + constraintComps + "..." + msg)
         }
         .getOrElse {
           BadRequest("Expecting application/json request body")
