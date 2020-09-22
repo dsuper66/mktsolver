@@ -241,13 +241,13 @@ class TodoController @Inject() (
                 for (
                   childElement <- modelElements.filter(
                     _.elementType == constraintComp.elementType
-                      && _.properties.filter {
+                      && (_.properties.filter {
                         case (name, value) =>
                           (
                             name,
                             value
                           ) == (constraintComp.propertyMapToParent, parentElement.elementId)
-                      }.headOption != None
+                      }.headOption != None)
                   )
                 ) {
                   msg += childElement.elementId + "-" + constraintComp.varType + " "
