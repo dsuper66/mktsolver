@@ -228,6 +228,7 @@ class TodoController @Inject() (
             ) {
               msg += "\n\n   " + parentElement.elementId + " has constraint: "
               msg += constraintDef.constraintId + " with components:"
+              msg += "1*" + parentElement.elementId + "." + constraintDef.varType
 
               //Get the constraint components
               for (
@@ -269,8 +270,8 @@ class TodoController @Inject() (
           // //   outString += (s"element: $element\n")
 
           Ok(
-            "SCALA data:\n" + modelElements + "\r\n \r\n"
-              + "====" + constraintDefs + "\n====" + constraintComps + "\n\n====" + msg
+            "SCALA data:\n" + modelElements + "\r\n"
+              + "====\n" + constraintDefs + "\n====\n" + constraintComps + "\n====\n" + msg
           )
         }
         .getOrElse {
