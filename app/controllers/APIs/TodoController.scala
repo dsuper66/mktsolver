@@ -239,16 +239,18 @@ class TodoController @Inject() (
                 //matches the Id of the constraint def parent
                 //Case classes are especially useful for pattern matching...
                 for (
-                  childElement <- modelElements.filter(
-                    _.elementType == constraintComp.elementType
-                      && (_.properties.filter {
+                  childElement <-
+                    modelElements
+                      .filter(
+                        _.elementType == constraintComp.elementType
+                      )
+                      .filter(_.properties.filter {
                         case (name, value) =>
                           (
                             name,
                             value
                           ) == (constraintComp.propertyMapToParent, parentElement.elementId)
                       }.headOption != None)
-                  )
                 ) {
                   msg += childElement.elementId + "-" + constraintComp.varType + " "
                 }
