@@ -235,7 +235,7 @@ class TodoController @Inject() (
                   _.constraintId == constraintDef.constraintId
                 )
               ) {
-                //Get component elements where their property named parentMapProperty
+                //Get component elements where their property named propertyMapToParent
                 //matches the Id of the constraint def parent
                 //Case classes are especially useful for pattern matching...
                 for (
@@ -252,7 +252,8 @@ class TodoController @Inject() (
                           ) == (constraintComp.propertyMapToParent, parentElement.elementId)
                       }.headOption != None)
                 ) {
-                  msg += childElement.elementId + "-" + constraintComp.varType + " "
+                  msg += constraintComp.multValue + "*"
+                  msg += childElement.elementId + "." + constraintComp.varType + " "
                 }
               }
             }
