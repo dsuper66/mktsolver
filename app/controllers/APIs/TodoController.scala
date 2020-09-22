@@ -187,7 +187,7 @@ class TodoController @Inject() (
   object ConstraintComp {
     //need Json deserializer for type
     implicit val reads = Json.reads[ConstraintComp]
-  }  
+  }
 
   //A Play Action is a function that handles a request and generates a result to be sent to the client.
   //In Scala, a List inherits from Seq, but implements Product
@@ -213,26 +213,43 @@ class TodoController @Inject() (
 
           val constraintDefs = (json \ "constraintDefs").as[Seq[ConstraintDef]]
 
-          val constraintComps = (json \ "constraintComps").as[Seq[ConstraintComp]]
+          val constraintComps =
+            (json \ "constraintComps").as[Seq[ConstraintComp]]
 
           var msg = ""
-          for (constraintDef <- constraintDefs) {
-            for (parentElement <- modelElements.filter(_.elementType == constraintDef.elementType)){
-                msg += modelElement.elementId + " has constraint: " + constraintDef.constraintId + " components:"
 
-                for (constraintComp <- constraintComps) {
-                  //Get component elements where their property named parentMapProperty 
-                  //matches the Id of the constraint def parent
-                  //Case classes are especially useful for pattern matching...
-                  for (childElement <- modelElements.filter(
-                      _.properties.filter{
-                        case (name,value) => 
-                        (name,value) == (constraintComp.propertyMapToParent,parentElement.elementId)
-                      }.headOption != None)
-                  ){
-                    msg += childElement.elementId + "..."
-                  }                                 
+          //Constraint Defs
+          for (constraintDef <- constraintDefs) {
+            //Get the parent elements that match the Constraint Def parent type
+            //e.g. for node balance, do each bus
+            for (
+              parentElement <-
+                modelElements.filter(_.elementType == constraintDef.elementType)
+            ) {
+              msg += parentElement.elementId + " has constraint: " + constraintDef.constraintId + " components:"
+
+              //Get the constraint components
+              for (
+                constraintComp <- constraintComps.filter(
+                  _.constraintId == constraintDef.constraintId
+                )
+              ) {
+                //Get component elements where their property named parentMapProperty
+                //matches the Id of the constraint def parent
+                //Case classes are especially useful for pattern matching...
+                for (
+                  childElement <- modelElements.filter(_.properties.filter {
+                    case (name, value) =>
+                      (
+                        name,
+                        value
+                      ) == (constraintComp.propertyMapToParent, parentElement.elementId)
+                  }.headOption != None)
+                ) {
+                  msg += childElement.elementId + "..."
+                }
               }
+            }
           }
           // Json.parse(s).as[Seq[ModelElement]]
 
@@ -244,8 +261,10 @@ class TodoController @Inject() (
           // // for ((element, arrayOfProperties) <- elements)
           // //   outString += (s"element: $element\n")
 
-          Ok("SCALA data:\n" + modelElements + "\r\n \r\n" 
-            + "====" + constraintDefs + "\n"  + "====" + constraintComps + "..." + msg)
+          Ok(
+            "SCALA data:\n" + modelElements + "\r\n \r\n"
+              + "====" + constraintDefs + "\n" + "====" + constraintComps + "..." + msg
+          )
         }
         .getOrElse {
           BadRequest("Expecting application/json request body")
