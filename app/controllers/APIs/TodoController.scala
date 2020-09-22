@@ -227,7 +227,7 @@ class TodoController @Inject() (
                 modelElements.filter(_.elementType == constraintDef.elementType)
             ) {
               msg += "\n\n   " + parentElement.elementId + " has constraint: "
-              msg += + constraintDef.constraintId + " with components:"
+              msg += constraintDef.constraintId + " with components:"
 
               //Get the constraint components
               for (
