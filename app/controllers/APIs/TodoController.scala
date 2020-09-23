@@ -230,7 +230,7 @@ class TodoController @Inject() (
               msg += constraintDef.constraintId + " with components:"
 
               //Is the parent element part of the constraint
-              if (constraintDef.varType <> "") {
+              if (constraintDef.varType != "") {
                 msg += s"1* $parentElement.elementId.$constraintDef.varType"
               }
 
