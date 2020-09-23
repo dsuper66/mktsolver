@@ -259,8 +259,7 @@ class TodoController @Inject() (
                           ) == (constraintComp.propertyMapToParent, parentElement.elementId)
                       }.headOption != None)
                 ) {
-                  msg += constraintComp.multValue + "*"
-                  msg += childElement.elementId + "." + constraintComp.varType + " "
+                  msg += s"${constraintComp.multValue} * ${childElement.elementId}.${constraintComp.varType} "
                 }
               }//done components
 
@@ -273,7 +272,7 @@ class TodoController @Inject() (
                 val rhsValueFromProperty = parentElement.properties.filter{
                   case(name,value) => name == constraintDef.rhsProperty}.headOption
                 if (rhsValueFromProperty != None) {
-                  msg += s" ${rhsValueFromProperty}"
+                  msg += s" ${rhsValueFromProperty.get._2}"
                 }
               }
               else { //RHS from value
