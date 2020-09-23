@@ -228,7 +228,11 @@ class TodoController @Inject() (
             ) {
               msg += "\n\n   " + parentElement.elementId + " has constraint: "
               msg += constraintDef.constraintId + " with components:"
-              msg += "1*" + parentElement.elementId + "." + constraintDef.varType
+
+              //Is the parent element part of the constraint
+              if (constraintDef.varType <> "") {
+                msg += s"1* $parentElement.elementId.$constraintDef.varType"
+              }
 
               //Get the constraint components
               for (
@@ -256,7 +260,8 @@ class TodoController @Inject() (
                   msg += constraintComp.multValue + "*"
                   msg += childElement.elementId + "." + constraintComp.varType + " "
                 }
-              }
+              }//done components
+              msg += constraintDef.inEquality + " " + constraintDef.rhsValue
             }
           }
           // Json.parse(s).as[Seq[ModelElement]]
