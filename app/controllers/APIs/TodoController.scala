@@ -4,6 +4,7 @@ import javax.inject._
 import play.api.mvc._
 import play.api.libs.json._
 import models.{Todo}
+import scala.collection.immutable.LazyList.cons
 // import scala.util.parsing.json._
 // import play.api.libs.json._
 // import spray.json._
@@ -226,12 +227,11 @@ class TodoController @Inject() (
               parentElement <-
                 modelElements.filter(_.elementType == constraintDef.elementType)
             ) {
-              msg += "\n\n   " + parentElement.elementId + " has constraint: "
-              msg += constraintDef.constraintId + " with components:"
+              msg += s"\n\n ${parentElement.elementId} has constraint: ${constraintDef.constraintId} with components:"
 
               //Is the parent element part of the constraint
               if (constraintDef.varType != "") {
-                msg += s" 1* ${parentElement.elementId}.${constraintDef.varType}"
+                msg += s" 1* ${parentElement.elementId}.${constraintDef.varType} "
               }
 
               //Get the constraint components
@@ -261,7 +261,22 @@ class TodoController @Inject() (
                   msg += childElement.elementId + "." + constraintComp.varType + " "
                 }
               }//done components
-              msg += constraintDef.inEquality + " " + constraintDef.rhsValue
+
+              //LE or EQ
+              msg += s"${constraintDef.inEquality}"
+
+              //RHS              
+              //check if RHS is a property of the parent element
+              if (constraintDef.rhsProperty != "") {
+                val (rhsProperty,rhsValue)  = parentElement.properties.filter{
+                  case (name, value) => name == constraintDef.rhsProperty}.headOption
+                if ((rhsProperty,rhsValue) != None) {
+                  msg += s"${rhsValue}"
+                }
+              }
+              else { //RHS from value
+                msg += s"${constraintDef.rhsValue}"
+              }
             }
           }
           // Json.parse(s).as[Seq[ModelElement]]
