@@ -229,7 +229,7 @@ class TodoController @Inject() (
               parentElement <-
                 modelElements.filter(_.elementType == constraintDef.elementType)
             ) {
-              msg += s"\n${parentElement.elementId} has constraint:\n ${constraintDef.constraintId}\n with components:"
+              msg += s"\n${parentElement.elementId} has constraint: ${constraintDef.constraintId}\nwith components:\n"
 
               //Is the parent element part of the constraint
               if (constraintDef.varType != "") {
@@ -259,7 +259,7 @@ class TodoController @Inject() (
                           ) == (constraintComp.propertyMapToParent, parentElement.elementId)
                       }.headOption != None)
                 ) {
-                  msg += s"${constraintComp.multValue} * ${childElement.elementId}.${constraintComp.varType} \n"
+                  msg += s" ${constraintComp.multValue} * ${childElement.elementId}.${constraintComp.varType} \n"
                 }
               }//done components
 
@@ -290,8 +290,7 @@ class TodoController @Inject() (
           // // for ((element, arrayOfProperties) <- elements)
           // //   outString += (s"element: $element\n")
 
-          Ok(
-            "SCALA data:\n" + modelElements + "\r\n"
+          Ok("SCALA data:\n" + modelElements + "\r\n"
               + "====\n" + constraintDefs + "\n====\n" + constraintComps + "\n====\n" + msg
           )
         }
