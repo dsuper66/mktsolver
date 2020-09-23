@@ -270,9 +270,9 @@ class TodoController @Inject() (
               //RHS              
               //check if RHS is a property of the parent element
               if (constraintDef.rhsProperty != "") {
-                val (name,value) = parentElement.properties.filter{
+                val Option(name,value) = parentElement.properties.filter{
                   case(name,value) => name == constraintDef.rhsProperty}.headOption
-                if (name != None) {
+                if ((name,value) != None) {
                   msg += s"${value}"
                 }
               }
