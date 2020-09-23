@@ -273,11 +273,11 @@ class TodoController @Inject() (
                 val rhsValueFromProperty = parentElement.properties.filter{
                   case(name,value) => name == constraintDef.rhsProperty}.headOption._2
                 if (rhsValueFromProperty != None) {
-                  msg += s"${rhsValueFromProperty}"
+                  msg += s" ${rhsValueFromProperty}"
                 }
               }
               else { //RHS from value
-                msg += s"${constraintDef.rhsValue}"
+                msg += s" ${constraintDef.rhsValue}"
               }
             }
           }
