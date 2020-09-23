@@ -229,7 +229,7 @@ class TodoController @Inject() (
               parentElement <-
                 modelElements.filter(_.elementType == constraintDef.elementType)
             ) {
-              msg += s"\n\n ${parentElement.elementId} has constraint: ${constraintDef.constraintId} with components:"
+              msg += s"\n${parentElement.elementId} has constraint:\n ${constraintDef.constraintId}\n with components:"
 
               //Is the parent element part of the constraint
               if (constraintDef.varType != "") {
@@ -259,12 +259,12 @@ class TodoController @Inject() (
                           ) == (constraintComp.propertyMapToParent, parentElement.elementId)
                       }.headOption != None)
                 ) {
-                  msg += s"${constraintComp.multValue} * ${childElement.elementId}.${constraintComp.varType} "
+                  msg += s"${constraintComp.multValue} * ${childElement.elementId}.${constraintComp.varType} \n"
                 }
               }//done components
 
               //LE or EQ
-              msg += s"${constraintDef.inEquality}"
+              msg += s" ${constraintDef.inEquality}"
 
               //RHS              
               //check if RHS is a property of the parent element
