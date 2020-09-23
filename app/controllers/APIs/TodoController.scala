@@ -114,6 +114,8 @@ class TodoController @Inject() (
       multValue: Double
   )
 
+  case class Property( name : String , value : Any )
+
 // For example, the type Int => String, is equivalent to
 // the type Function1[Int,String] i.e. a function that takes an argument of type Int and returns a String.
 // scala> val f: Function1[Int,String] = myInt => "my int: "+myInt.toString
@@ -268,10 +270,10 @@ class TodoController @Inject() (
               //RHS              
               //check if RHS is a property of the parent element
               if (constraintDef.rhsProperty != "") {
-                val Option(rhsProperty,rhsValue)  = parentElement.properties.filter{
+                val matchedProperty:Property  = parentElement.properties.filter{
                   case (name, value) => name == constraintDef.rhsProperty}.headOption
-                if ((rhsProperty,rhsValue) != None) {
-                  msg += s"${rhsValue}"
+                if (matchedProperty != None) {
+                  msg += s"${matchedProperty.value}"
                 }
               }
               else { //RHS from value
