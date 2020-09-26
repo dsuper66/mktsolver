@@ -329,8 +329,8 @@ class TodoController @Inject() (
                   msgForThisConstraint += s" ${rhsValueFromProperty.get._2}"
                 }
                 else { //DON'T BUILD THE CONSTRAINT IF THE RHS PROPERTY IS MISSING
-                  msgForThisConstraint = (s"skip ${constraintDef.constraintId} " +
-                    s"for ${parentElement.elementId} because has no ${constraintDef.rhsProperty}")
+                  msgForThisConstraint = (s"\n skip ${constraintDef.constraintId} " +
+                    s"because ${parentElement.elementId} has no ${constraintDef.rhsProperty}")
                 }
               } else { //RHS from value
                 msgForThisConstraint += s" ${constraintDef.rhsValue}"
