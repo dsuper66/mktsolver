@@ -265,11 +265,13 @@ class TodoController @Inject() (
                   var multiplier = constraintComp.multValue
                   //If this component has a multProperty then that is also a multiplier
                   if (constraintComp.multProperty != "") {
-                    msg += s"\nfound multProperty ${constraintComp.multProperty}"
+                    msg += s"\nfound multProperty ${constraintComp.multProperty}\n"
                     val matchingProperty = childElement.properties.filter(
                       _._1 == constraintComp.multParentProperty).headOption
                     if (matchingProperty != None) {
-                      multiplier *= matchingProperty.get._2.asInstanceOf[Double]
+                      val extractedMult = matchingProperty.get._2.asInstanceOf[Double]
+                      msg += s"\nextracted mult ${matchingProperty.get._2}\n"
+                      multiplier *= extractedMult
                     }
                   }
                   msg += s" $multiplier * ${childElement.elementId}.${constraintComp.varType} \n"
