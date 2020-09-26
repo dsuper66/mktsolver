@@ -102,7 +102,8 @@ class TodoController @Inject() (
       varType: String,
       inEquality: String,
       rhsProperty: String,
-      rhsValue: Double
+      rhsValue: Double,
+      multProperty: String
   )
 
   case class ConstraintComp(
@@ -111,7 +112,8 @@ class TodoController @Inject() (
       propertyMapToParent: String,
       varType: String,
       multParentProperty: String,
-      multValue: Double
+      multValue: Double,
+      multProperty: String
   )
 
   case class Property( name : String , value : Any )
@@ -231,35 +233,44 @@ class TodoController @Inject() (
             ) {
               msg += s"\n${parentElement.elementId} has constraint: ${constraintDef.constraintId}\nwith components:\n"
 
-              //Is the parent element part of the constraint
+              //Does the parent element have a var in the constraint
               if (constraintDef.varType != "") {
                 msg += s" 1* ${parentElement.elementId}.${constraintDef.varType}\n"
               }
 
               //Get the constraint components
-              for (
+              for ( //Get components where the constraint Id property matches
                 constraintComp <- constraintComps.filter(
                   _.constraintId == constraintDef.constraintId
                 )
               ) {
-                //Get component elements where their property named propertyMapToParent
-                //matches the Id of the constraint def parent
-                //Case classes are especially useful for pattern matching...
+                //Get component elements where their elementType matches AND their property
+                //as specified by propertyMapToParent matches the constraintDef parent element
+                //(case classes are especially useful for pattern matching...)
                 for (
                   childElement <-
                     modelElements
                       .filter(
-                        _.elementType == constraintComp.elementType
+                        _.elementType == constraintComp.elementType //elementType matches
                       )
-                      .filter(_.properties.filter {
+                      .filter(_.properties.filter { //property matches parent
                         case (name, value) =>
                           (
                             name,
                             value
                           ) == (constraintComp.propertyMapToParent, parentElement.elementId)
                       }.headOption != None)
-                ) {
-                  msg += s" ${constraintComp.multValue} * ${childElement.elementId}.${constraintComp.varType} \n"
+                ) {                  
+                  //The multiplier for the component
+                  var multiplier = constraintComp.multValue
+                  //If this component has a multProperty then that is also a multiplier
+                  if (constraintComp.multProperty != "") {
+                    val matchingProperty = childElement.properties.filter(_._1 == constraintComp.multParentProperty).headOption
+                    if (matchingProperty != None) {
+                      multiplier *= matchingProperty.get._2
+                    }
+                  }
+                  msg += s" $multiplier * ${childElement.elementId}.${constraintComp.varType} \n"
                 }
               }//done components
 
