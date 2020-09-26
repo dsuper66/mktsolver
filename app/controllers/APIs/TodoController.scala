@@ -239,17 +239,18 @@ class TodoController @Inject() (
 
           //Constraint Defs
           for (constraintDef <- constraintDefs) {
-            //Get the parent elements that match the Constraint Def parent type
+            //Get the parent elements that match the ConstraintDef elementType
             //e.g. for node balance, do each bus
             for (
               parentElement <-
                 modelElements.filter(_.elementType == constraintDef.elementType)
             ) {
-              msg += s"\n${parentElement.elementId} has constraint: ${constraintDef.constraintId}\nwith components:\n"
+              var msgForThisConstraint = (s"\n${parentElement.elementId} " +
+                s"has constraint: ${constraintDef.constraintId}\nwith components:\n")
 
               //Does the parent element have a var in the constraint
               if (constraintDef.varType != "") {
-                msg += s" 1* ${parentElement.elementId}.${constraintDef.varType}\n"
+                msgForThisConstraint += s" 1* ${parentElement.elementId}.${constraintDef.varType}\n"
               }
 
               //Get the constraint components
@@ -262,11 +263,10 @@ class TodoController @Inject() (
                 //as specified by propertyMap matches the constraintDef parent element
                 //(case classes are especially useful for pattern matching...)
 
-                //elementType matches
+                //elements where elementType matches constraint component
                 val childElementsMatchingType = modelElements.filter(
                   _.elementType == constraintComp.elementType
-                )
-
+                )          
                 for (
                   childElement <-
                     childElementsMatchingType
@@ -311,12 +311,13 @@ class TodoController @Inject() (
                   //       multiplier * matchingProperty.get._2.toString().toDouble
                   //   }
                   // }
-                  msg += s" $multiplier * ${childElement.elementId}.${constraintComp.varType} \n"
+                  msgForThisConstraint += s" $multiplier * ${childElement.elementId}.${constraintComp.varType} \n"
                 }
               } //done components
 
               //LE or EQ
-              msg += s" ${constraintDef.inEquality}"
+              val inEquality = constraintDef.inEquality
+              msgForThisConstraint += s" $inEquality"
 
               //RHS
               //check if RHS is a property of the parent element
@@ -325,11 +326,17 @@ class TodoController @Inject() (
                   case (name, value) => name == constraintDef.rhsProperty
                 }.headOption
                 if (rhsValueFromProperty != None) {
-                  msg += s" ${rhsValueFromProperty.get._2}"
+                  msgForThisConstraint += s" ${rhsValueFromProperty.get._2}"
+                }
+                else { //DON'T BUILD THE CONSTRAINT IF THE RHS PROPERTY IS MISSING
+                  msgForThisConstraint = (s"skip ${constraintDef.constraintId} " +
+                    s"for ${parentElement.elementId} because has no ${constraintDef.rhsProperty}")
                 }
               } else { //RHS from value
-                msg += s" ${constraintDef.rhsValue}"
+                msgForThisConstraint += s" ${constraintDef.rhsValue}"
               }
+
+              msg += msgForThisConstraint
             }
           }
           // Json.parse(s).as[Seq[ModelElement]]
