@@ -267,8 +267,8 @@ class TodoController @Inject() (
                   if (constraintComp.multProperty != "") {
                     msg += s"\nchild: ${childElement.elementId} look for property: ${constraintComp.multProperty}\n"
 
-                    val matchingProperty = childElement.properties.filter(
-                      _._1 == constraintComp.multParentProperty).headOption
+                    val matchingProperty = childElement.properties.filter{
+                      case (name, value) => name == constraintComp.multParentProperty}.headOption
 
                     if (matchingProperty != None) {
                       msg += s"\nfound ${matchingProperty.get._2}\n"
