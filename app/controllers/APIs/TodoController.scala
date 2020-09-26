@@ -109,14 +109,14 @@ class TodoController @Inject() (
   case class ConstraintComp(
       constraintId: String,
       elementType: String,
-      propertyMapToParent: String,
+      propertyMap: String,
       varType: String,
       multParentProperty: String,
       multValue: Double,
       multProperty: String
   )
 
-  case class Property( name : String , value : Any )
+  case class Property(name: String, value: Any)
 
 // For example, the type Int => String, is equivalent to
 // the type Function1[Int,String] i.e. a function that takes an argument of type Int and returns a String.
@@ -245,22 +245,33 @@ class TodoController @Inject() (
                 )
               ) {
                 //Get component elements where their elementType matches AND their property
-                //as specified by propertyMapToParent matches the constraintDef parent element
+                //as specified by propertyMap matches the constraintDef parent element
                 //(case classes are especially useful for pattern matching...)
+
+                //elementType matches
+                val childElementsMatchingType = modelElements.filter(
+                  _.elementType == constraintComp.elementType
+                )
+
                 for (
                   childElement <-
-                    modelElements
-                      .filter(
-                        _.elementType == constraintComp.elementType //elementType matches
+                    childElementsMatchingType
+                      .filter(childElementMatching =>
+                        ( //parent matches propertyMap for child
+                          (childElementMatching.properties
+                            .filter(property =>
+                              (property._1 == constraintComp.propertyMap
+                                && property._2 == parentElement.elementId)
+                            ).headOption != None)
+                            || //or child matches propertyMap for parent
+                              (parentElement.properties
+                                .filter(property =>
+                                  (property._1 == constraintComp.propertyMap
+                                    && property._2 == childElementMatching.elementId)
+                                ).headOption != None)
+                        )
                       )
-                      .filter(_.properties.filter { //property matches parent
-                        case (name, value) =>
-                          (
-                            name,
-                            value
-                          ) == (constraintComp.propertyMapToParent, parentElement.elementId)
-                      }.headOption != None)
-                ) {                  
+                ) {
                   //The multiplier for the component
                   var multiplier = constraintComp.multValue
 
@@ -268,32 +279,34 @@ class TodoController @Inject() (
                   if (constraintComp.multProperty != "") {
                     //msg += s"\nchild: ${childElement.elementId} look for property: ${constraintComp.multProperty}\n"
 
-                    val matchingProperty = childElement.properties.filter{
-                      case (name, value) => name == constraintComp.multProperty}.headOption
+                    val matchingProperty = childElement.properties.filter {
+                      case (name, value) => name == constraintComp.multProperty
+                    }.headOption
 
                     if (matchingProperty != None) {
                       //msg += s"\nfound ${matchingProperty.get._2}\n"
-                      val extractedMult = matchingProperty.get._2             
-                      multiplier = multiplier * matchingProperty.get._2.toString().toInt
+                      val extractedMult = matchingProperty.get._2
+                      multiplier =
+                        multiplier * matchingProperty.get._2.toString().toInt
                     }
                   }
                   msg += s" $multiplier * ${childElement.elementId}.${constraintComp.varType} \n"
                 }
-              }//done components
+              } //done components
 
               //LE or EQ
               msg += s" ${constraintDef.inEquality}"
 
-              //RHS              
+              //RHS
               //check if RHS is a property of the parent element
               if (constraintDef.rhsProperty != "") {
-                val rhsValueFromProperty = parentElement.properties.filter{
-                  case(name,value) => name == constraintDef.rhsProperty}.headOption
+                val rhsValueFromProperty = parentElement.properties.filter {
+                  case (name, value) => name == constraintDef.rhsProperty
+                }.headOption
                 if (rhsValueFromProperty != None) {
                   msg += s" ${rhsValueFromProperty.get._2}"
                 }
-              }
-              else { //RHS from value
+              } else { //RHS from value
                 msg += s" ${constraintDef.rhsValue}"
               }
             }
@@ -308,7 +321,8 @@ class TodoController @Inject() (
           // // for ((element, arrayOfProperties) <- elements)
           // //   outString += (s"element: $element\n")
 
-          Ok("SCALA data:\n" + modelElements + "\r\n"
+          Ok(
+            "SCALA data:\n" + modelElements + "\r\n"
               + "====\n" + constraintDefs + "\n====\n" + constraintComps + "\n====\n" + msg
           )
         }
