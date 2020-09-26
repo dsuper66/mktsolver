@@ -273,7 +273,7 @@ class TodoController @Inject() (
 
                     if (matchingProperty != None) {
                       //msg += s"\nfound ${matchingProperty.get._2}\n"
-                      val extractedMult = matchingProperty.get._2               
+                      val extractedMult = matchingProperty.get._2.asInstanceOf(Int)              
                       multiplier = multiplier * extractedMult
                     }
                   }
