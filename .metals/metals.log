@@ -1177,3 +1177,27 @@ WARNING: Unmatched cancel notification for request id 12585
 2020.09.26 13:03:56 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-ExZwFwWbTASil3zh0HUejA==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
 2020.09.26 13:04:39 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-ExZwFwWbTASil3zh0HUejA==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
 2020.09.26 14:06:48 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-ExZwFwWbTASil3zh0HUejA==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+Sep 26, 2020 2:14:08 PM scala.meta.internal.pc.completions.Completions completionPosition
+SEVERE: null
+java.lang.NullPointerException
+	at scala.meta.internal.pc.MetalsGlobal.metalsSeenFromType(MetalsGlobal.scala:663)
+	at scala.meta.internal.pc.completions.MatchCaseCompletions$CaseKeywordCompletion.<init>(MatchCaseCompletions.scala:49)
+	at scala.meta.internal.pc.completions.Completions.fromIdentApply$1(Completions.scala:423)
+	at scala.meta.internal.pc.completions.Completions.completionPositionUnsafe(Completions.scala:443)
+	at scala.meta.internal.pc.completions.Completions.completionPositionUnsafe$(Completions.scala:409)
+	at scala.meta.internal.pc.MetalsGlobal.completionPositionUnsafe(MetalsGlobal.scala:29)
+	at scala.meta.internal.pc.completions.Completions.completionPosition(Completions.scala:401)
+	at scala.meta.internal.pc.completions.Completions.completionPosition$(Completions.scala:386)
+	at scala.meta.internal.pc.MetalsGlobal.completionPosition(MetalsGlobal.scala:29)
+	at scala.meta.internal.pc.CompletionProvider.safeCompletionsAt(CompletionProvider.scala:444)
+	at scala.meta.internal.pc.CompletionProvider.completions(CompletionProvider.scala:57)
+	at scala.meta.internal.pc.ScalaPresentationCompiler.$anonfun$complete$1(ScalaPresentationCompiler.scala:184)
+	at scala.meta.internal.pc.CompilerAccess.withSharedCompiler(CompilerAccess.scala:137)
+	at scala.meta.internal.pc.CompilerAccess.$anonfun$withInterruptableCompiler$1(CompilerAccess.scala:87)
+	at scala.meta.internal.pc.CompilerAccess.$anonfun$onCompilerJobQueue$1(CompilerAccess.scala:197)
+	at scala.meta.internal.pc.CompilerJobQueue$Job.run(CompilerJobQueue.scala:103)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+
+2020.09.26 14:14:51 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-ExZwFwWbTASil3zh0HUejA==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
