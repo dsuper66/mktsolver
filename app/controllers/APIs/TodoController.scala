@@ -205,6 +205,20 @@ class TodoController @Inject() (
   //   invalid = e => throw JsResultException(e)
   // )
 
+  def getPropertyAsDoubleOrOne(element: ModelElement, propertyType: String): Double = {
+    
+      val matchingProperty = element.properties
+        .filter(property => property._1 == propertyType)
+        .headOption
+
+      if (matchingProperty != None) {
+        matchingProperty.get._2.toString().toDouble
+      }
+      else {
+        1.0
+      }
+  }
+
   def solve2 =
     Action { request: Request[AnyContent] =>
       // response().setHeader(CACHE_CONTROL, "max-age=3600");
@@ -262,34 +276,41 @@ class TodoController @Inject() (
                             .filter(property =>
                               (property._1 == constraintComp.propertyMap
                                 && property._2 == parentElement.elementId)
-                            ).headOption != None)
+                            )
+                            .headOption != None)
                             || //or child matches propertyMap for parent
                               (parentElement.properties
                                 .filter(property =>
                                   (property._1 == constraintComp.propertyMap
                                     && property._2 == childElementMatching.elementId)
-                                ).headOption != None)
+                                )
+                                .headOption != None)
                         )
                       )
                 ) {
                   //The multiplier for the component
                   var multiplier = constraintComp.multValue
 
-                  //If this component has a multProperty then that is also a multiplier
-                  if (constraintComp.multProperty != "") {
-                    //msg += s"\nchild: ${childElement.elementId} look for property: ${constraintComp.multProperty}\n"
+                  //The multiplier is also from the multProperty of the parent or child
+                  //or the multParentProperty of the child
+                  multiplier = (multiplier 
+                    * getPropertyAsDoubleOrOne(childElement,constraintComp.multProperty)
+                    * getPropertyAsDoubleOrOne(parentElement,constraintComp.multParentProperty)
+                    * getPropertyAsDoubleOrOne(parentElement,constraintDef.multProperty))
+                  // if (constraintComp.multProperty != "") {
+                  //   val matchingProperty = childElement.properties
+                  //     .filter(property =>
+                  //       property._1 == constraintComp.multProperty
+                  //     )
+                  //     .headOption
 
-                    val matchingProperty = childElement.properties.filter {
-                      case (name, value) => name == constraintComp.multProperty
-                    }.headOption
-
-                    if (matchingProperty != None) {
-                      //msg += s"\nfound ${matchingProperty.get._2}\n"
-                      val extractedMult = matchingProperty.get._2
-                      multiplier =
-                        multiplier * matchingProperty.get._2.toString().toInt
-                    }
-                  }
+                  //   if (matchingProperty != None) {
+                  //     //msg += s"\nfound ${matchingProperty.get._2}\n"
+                  //     val extractedMult = matchingProperty.get._2
+                  //     multiplier =
+                  //       multiplier * matchingProperty.get._2.toString().toDouble
+                  //   }
+                  // }
                   msg += s" $multiplier * ${childElement.elementId}.${constraintComp.varType} \n"
                 }
               } //done components
