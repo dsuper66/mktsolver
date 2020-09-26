@@ -274,7 +274,7 @@ class TodoController @Inject() (
                     if (matchingProperty != None) {
                       //msg += s"\nfound ${matchingProperty.get._2}\n"
                       val extractedMult = matchingProperty.get._2               
-                      multiplier *= extractedMult
+                      multiplier = multiplier * extractedMult
                     }
                   }
                   msg += s" $multiplier * ${childElement.elementId}.${constraintComp.varType} \n"
