@@ -266,19 +266,22 @@ class TodoController @Inject() (
                 //elements where elementType matches constraint component
                 val childElementsMatchingType = modelElements.filter(
                   _.elementType == constraintComp.elementType
-                )          
+                ) 
+                //then check for property map from parent to child or child to parent         
                 for (
                   childElement <-
                     childElementsMatchingType
                       .filter(childElementMatching =>
-                        ( //parent matches propertyMap for child
+                        ( //parent matches propertyMap from child
+                          (constraintComp.propertyMap == "all")
+                          ||
                           (childElementMatching.properties
                             .filter(property =>
                               (property._1 == constraintComp.propertyMap
                                 && property._2 == parentElement.elementId)
                             )
                             .headOption != None)
-                            || //or child matches propertyMap for parent
+                            || //or child matches propertyMap from parent
                               (parentElement.properties
                                 .filter(property =>
                                   (property._1 == constraintComp.propertyMap
