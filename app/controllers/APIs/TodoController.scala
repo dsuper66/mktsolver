@@ -273,7 +273,7 @@ class TodoController @Inject() (
                     childElementsMatchingType
                       .filter(childElementMatching =>
                         ( //parent matches propertyMap from child
-                          (constraintComp.propertyMap == "all")
+                          (constraintComp.propertyMap == "all") //all bids and offers are in objective
                           ||
                           (childElementMatching.properties
                             .filter(property =>
@@ -300,20 +300,7 @@ class TodoController @Inject() (
                     * getPropertyAsDoubleOrOne(childElement,constraintComp.multProperty)
                     * getPropertyAsDoubleOrOne(parentElement,constraintComp.multParentProperty)
                     * getPropertyAsDoubleOrOne(parentElement,constraintDef.multProperty))
-                  // if (constraintComp.multProperty != "") {
-                  //   val matchingProperty = childElement.properties
-                  //     .filter(property =>
-                  //       property._1 == constraintComp.multProperty
-                  //     )
-                  //     .headOption
-
-                  //   if (matchingProperty != None) {
-                  //     //msg += s"\nfound ${matchingProperty.get._2}\n"
-                  //     val extractedMult = matchingProperty.get._2
-                  //     multiplier =
-                  //       multiplier * matchingProperty.get._2.toString().toDouble
-                  //   }
-                  // }
+                  
                   msgForThisConstraint += s" $multiplier * ${childElement.elementId}.${constraintComp.varType} \n"
                 }
               } //done components
@@ -328,12 +315,13 @@ class TodoController @Inject() (
                 val rhsValueFromProperty = parentElement.properties.filter {
                   case (name, value) => name == constraintDef.rhsProperty
                 }.headOption
+
                 if (rhsValueFromProperty != None) {
                   msgForThisConstraint += s" ${rhsValueFromProperty.get._2}"
                 }
-                else { //DON'T BUILD THE CONSTRAINT IF THE RHS PROPERTY IS MISSING
-                  msgForThisConstraint = (s"\n skip ${constraintDef.constraintId} " +
-                    s"because ${parentElement.elementId} has no ${constraintDef.rhsProperty}")
+                else { //Error if the RHS property is missing (constraint not created)
+                  msgForThisConstraint = (s"\n ERROR ${constraintDef.constraintId} " +
+                    s"for ${parentElement.elementId} has RHS ${constraintDef.rhsProperty} but property not found")
                 }
               } else { //RHS from value
                 msgForThisConstraint += s" ${constraintDef.rhsValue}"
