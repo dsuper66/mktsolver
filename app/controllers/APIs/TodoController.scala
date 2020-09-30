@@ -10,6 +10,11 @@ import scala.collection.immutable.LazyList.cons
 // import spray.json._
 // import DefaultJsonProtocol._
 
+import solver.MathModel.ModelElement
+import solver.MathModel.ModelElements
+import solver.MathModel.ConstraintDef
+import solver.MathModel.ConstraintComp
+
 class TodoController @Inject() (
     cc: ControllerComponents
 ) extends AbstractController(cc) {
@@ -22,177 +27,77 @@ class TodoController @Inject() (
       Ok(Json.toJson(todo))
     }
 
-  case class Element(elementId: String, bus: String)
+  // case class Element(elementId: String, bus: String)
 
-  def solve =
-    Action { request: Request[AnyContent] =>
-      val body: AnyContent = request.body
-      val jsonBody: Option[JsValue] = body.asJson
+  // case class ModelElement(
+  //     elementId: String,
+  //     elementType: String,
+  //     properties: Map[String, Any]
+  // )
 
-      // Expecting json body
-      //   jsonBody
-      // .map { json =>
-      //   val subCategories =
-      //     (json \ "sub-categories").as[List[Map[String, String]]]
+  // case class ModelElements(modelElements: Seq[ModelElement])
 
-      //   val names = subCategories.map(_("elementId"))
-      //   Ok("Got: " + names)
-      // }
+  // case class ConstraintDef(
+  //     constraintId: String,
+  //     elementType: String,
+  //     varType: String,
+  //     inEquality: String,
+  //     rhsProperty: String,
+  //     rhsValue: Double,
+  //     multProperty: String
+  // )
 
-      jsonBody
-        .map { json =>
-          // val elementsToBus = Json.parse(json).as[Element]
-          // val map:Map[String, String] = json.asInstanceOf[Map[String, String]]
-          // var elementsToBus = jValue.extract[Element];
+  // case class ConstraintComp(
+  //     constraintId: String,
+  //     elementType: String,
+  //     propertyMap: String,
+  //     varType: String,
+  //     multParentProperty: String,
+  //     multValue: Double,
+  //     multProperty: String
+  // )
 
-          // val elements:List[Map[String, String]] =
-          // (json \ "elements").as[List[Map[String, String]]]
+  // case class Property(name: String, value: Any)
 
-          val elements: Map[String, String] =
-            (json \ "bus1").as[Map[String, String]]
+  // object ModelElement {
 
-          var outString = ""
-          for ((element, bus) <- elements)
-            outString += (s"element: $element, bus1: $bus\n")
+  //   //Reads looks for this implicit which tells it how to read [String,Any]
+  //   implicit val readsMap =
+  //     Reads[Map[String, Any]](m => Reads.mapReads[Any](anyReads).reads(m))
 
-          Ok("Got bus1:\n" + outString)
-        }
-        .getOrElse {
-          BadRequest("Expecting application/json request body")
-        }
-    }
+  //   val anyReads = Reads[Any](m => metaValueToJsValue(m))
 
-// //https://stackoverflow.com/questions/25741162/scala-reads-how-to-handle-optionmapstring-any
-//   object ContractDetails {
-//     implicit val readsMap =
-//       Reads[Map[String, Any]](m => Reads.mapReads[Any](anyReads).reads(m))
-//     implicit val reads = Json.reads[ContractDetails]
-//     val anyReads = Reads[Any](m => metaValueToJsValue(m))
+  //   def metaValueToJsValue(m: JsValue): JsResult[Any] = {
+  //     m match {
+  //       case JsBoolean(b) => JsSuccess(b)
+  //       case JsNumber(n)  => JsSuccess(n)
+  //       case JsString(s)  => JsSuccess(s)
+  //       case JsArray(arr) => {
+  //         val list = arr.map(metaValueToJsValue)
+  //         JsSuccess(list)
+  //       }
+  //       case JsNull => JsSuccess(null)
+  //       //case x => JsFailure(x.toString())
+  //       case JsObject(m) => {
+  //         val m1 = m.map(f => (f._1, metaValueToJsValue(f._2))).toMap
+  //         JsSuccess(m1)
+  //       }
+  //     }
+  //   }
 
-//     def metaValueToJsValue(m: JsValue): JsResult[Any] = {
-//       m match {
-//         case JsBoolean(b) => JsSuccess(b)
-//         case JsNumber(n)  => JsSuccess(n)
-//         case JsString(s)  => JsSuccess(s)
-//         case JsArray(arr) => {
-//           val list = arr.map(metaValueToJsValue)
-//           JsSuccess(list)
-//         }
-//         case JsNull => JsSuccess(null)
-//         //case x => JsFailure(x.toString())
-//         case JsObject(m) => {
-//           val m1 = m.map(f => (f._1, metaValueToJsValue(f._2))).toMap
-//           JsSuccess(m1)
-//         }
-//       }
-//     }
-//   }
+  //   //Json deserialiser for ModelElement (and needs to be after the above implicit for Reads)
+  //   implicit val reads = Json.reads[ModelElement]
+  // }
 
-//A Scala Case Class is like a regular class, except it is good for modeling immutable data
-  case class ModelElement(
-      elementId: String,
-      elementType: String,
-      properties: Map[String, Any]
-  )
-  case class ModelElements(modelElements: Seq[ModelElement])
+  // object ConstraintDef {
+  //   //need Json deserializer for type
+  //   implicit val reads = Json.reads[ConstraintDef]
+  // }
 
-  case class ConstraintDef(
-      constraintId: String,
-      elementType: String,
-      varType: String,
-      inEquality: String,
-      rhsProperty: String,
-      rhsValue: Double,
-      multProperty: String
-  )
-
-  case class ConstraintComp(
-      constraintId: String,
-      elementType: String,
-      propertyMap: String,
-      varType: String,
-      multParentProperty: String,
-      multValue: Double,
-      multProperty: String
-  )
-
-  case class Property(name: String, value: Any)
-
-// For example, the type Int => String, is equivalent to
-// the type Function1[Int,String] i.e. a function that takes an argument of type Int and returns a String.
-// scala> val f: Function1[Int,String] = myInt => "my int: "+myInt.toString
-
-// The final parameter list on a method can be marked implicit,
-// which means the values will be taken from the context in which they are called
-
-// An object with the same name as a class is called a companion object.
-// Conversely, the class is the object’s companion class.
-//A companion class or object can access the private members of its companion.
-// Use a companion object for methods and values which are not specific to instances of the companion class.
-//The companion object can also contain factory methods
-
-//Play Reads converters are used to convert from a JsValue to another type.
-
-// What's a Reads? It's just a trait that defines how a JsValue
-// (the play class encapsulating JSON values) should be deserialized from JSON to some type.
-// The trait only requires one method to be implemented, a reads method which
-// takes in some json and returns a JsResult of some type.
-
-// Here [A] is the type parameter for function findKth. Now what does type parameter mean?
-// Type parameter tells the compiler that method findKth can take parameter of type A.
-// Which is the generic type here because A can be anything.
-// For example A can be Int, Double, another List -- anything.
-
-//https://stackoverflow.com/questions/25741162/scala-reads-how-to-handle-optionmapstring-any
-
-//mapReads... Deserializer for a `Map[String,V]`
-  // implicit def mapReads[V](implicit fmtv: Reads[V]): Reads[Map[String, V]] =
-  //   mapReads[String, V](JsSuccess(_))
-
-  /**
-    * Convert the JsValue into a A
-    */
-  // def reads(json: JsValue): JsResult[A]
-
-  object ModelElement {
-
-    //Reads looks for this implicit which tells it how to read [String,Any]
-    implicit val readsMap =
-      Reads[Map[String, Any]](m => Reads.mapReads[Any](anyReads).reads(m))
-
-    val anyReads = Reads[Any](m => metaValueToJsValue(m))
-
-    def metaValueToJsValue(m: JsValue): JsResult[Any] = {
-      m match {
-        case JsBoolean(b) => JsSuccess(b)
-        case JsNumber(n)  => JsSuccess(n)
-        case JsString(s)  => JsSuccess(s)
-        case JsArray(arr) => {
-          val list = arr.map(metaValueToJsValue)
-          JsSuccess(list)
-        }
-        case JsNull => JsSuccess(null)
-        //case x => JsFailure(x.toString())
-        case JsObject(m) => {
-          val m1 = m.map(f => (f._1, metaValueToJsValue(f._2))).toMap
-          JsSuccess(m1)
-        }
-      }
-    }
-
-    //Json deserialiser for ModelElement (and needs to be after the above implicit for Reads)
-    implicit val reads = Json.reads[ModelElement]
-  }
-
-  object ConstraintDef {
-    //need Json deserializer for type
-    implicit val reads = Json.reads[ConstraintDef]
-  }
-
-  object ConstraintComp {
-    //need Json deserializer for type
-    implicit val reads = Json.reads[ConstraintComp]
-  }
+  // object ConstraintComp {
+  //   //need Json deserializer for type
+  //   implicit val reads = Json.reads[ConstraintComp]
+  // }
 
   //A Play Action is a function that handles a request and generates a result to be sent to the client.
   //In Scala, a List inherits from Seq, but implements Product
@@ -205,18 +110,20 @@ class TodoController @Inject() (
   //   invalid = e => throw JsResultException(e)
   // )
 
-  def getPropertyAsDoubleOrOne(element: ModelElement, propertyType: String): Double = {
-    
-      val matchingProperty = element.properties
-        .filter(property => property._1 == propertyType)
-        .headOption
+  def getPropertyAsDoubleOrOne(
+      element: ModelElement,
+      propertyType: String
+  ): Double = {
 
-      if (matchingProperty != None) {
-        matchingProperty.get._2.toString().toDouble
-      }
-      else {
-        1.0
-      }
+    val matchingProperty = element.properties
+      .filter(property => property._1 == propertyType)
+      .headOption
+
+    if (matchingProperty != None) {
+      matchingProperty.get._2.toString().toDouble
+    } else {
+      1.0
+    }
   }
 
   def solve2 =
@@ -245,6 +152,10 @@ class TodoController @Inject() (
               parentElement <-
                 modelElements.filter(_.elementType == constraintDef.elementType)
             ) {
+              val constraintId =
+                s"${constraintDef.constraintId}.${parentElement.elementId}"
+              var rowVarFactors = Array.emptyDoubleArray
+
               var msgForThisConstraint = (s"\n${parentElement.elementId} " +
                 s"has constraint: ${constraintDef.constraintId}\nwith components:\n")
 
@@ -266,21 +177,21 @@ class TodoController @Inject() (
                 //elements where elementType matches constraint component
                 val childElementsMatchingType = modelElements.filter(
                   _.elementType == constraintComp.elementType
-                ) 
-                //then check for property map from parent to child or child to parent         
+                )
+                //then check for property map from parent to child or child to parent
                 for (
                   childElement <-
                     childElementsMatchingType
                       .filter(childElementMatching =>
                         ( //parent matches propertyMap from child
                           (constraintComp.propertyMap == "all") //all bids and offers are in objective
-                          ||
-                          (childElementMatching.properties
-                            .filter(property =>
-                              (property._1 == constraintComp.propertyMap
-                                && property._2 == parentElement.elementId)
-                            )
-                            .headOption != None)
+                            ||
+                              (childElementMatching.properties
+                                .filter(property =>
+                                  (property._1 == constraintComp.propertyMap
+                                    && property._2 == parentElement.elementId)
+                                )
+                                .headOption != None)
                             || //or child matches propertyMap from parent
                               (parentElement.properties
                                 .filter(property =>
@@ -296,11 +207,20 @@ class TodoController @Inject() (
 
                   //The multiplier is also from the multProperty of the parent or child
                   //or the multParentProperty of the child
-                  multiplier = (multiplier 
-                    * getPropertyAsDoubleOrOne(childElement,constraintComp.multProperty)
-                    * getPropertyAsDoubleOrOne(parentElement,constraintComp.multParentProperty)
-                    * getPropertyAsDoubleOrOne(parentElement,constraintDef.multProperty))
-                  
+                  multiplier = (multiplier
+                    * getPropertyAsDoubleOrOne(
+                      childElement,
+                      constraintComp.multProperty
+                    )
+                    * getPropertyAsDoubleOrOne(
+                      parentElement,
+                      constraintComp.multParentProperty
+                    )
+                    * getPropertyAsDoubleOrOne(
+                      parentElement,
+                      constraintDef.multProperty
+                    ))
+
                   msgForThisConstraint += s" $multiplier * ${childElement.elementId}.${constraintComp.varType} \n"
                 }
               } //done components
@@ -318,10 +238,10 @@ class TodoController @Inject() (
 
                 if (rhsValueFromProperty != None) {
                   msgForThisConstraint += s" ${rhsValueFromProperty.get._2}"
-                }
-                else { //Error if the RHS property is missing (constraint not created)
-                  msgForThisConstraint = (s"\n ERROR ${constraintDef.constraintId} " +
-                    s"for ${parentElement.elementId} has RHS ${constraintDef.rhsProperty} but property not found")
+                } else { //Error if the RHS property is missing (constraint not created)
+                  msgForThisConstraint =
+                    (s"\n ERROR ${constraintDef.constraintId} " +
+                      s"for ${parentElement.elementId} has RHS ${constraintDef.rhsProperty} but property not found")
                 }
               } else { //RHS from value
                 msgForThisConstraint += s" ${constraintDef.rhsValue}"
@@ -330,15 +250,6 @@ class TodoController @Inject() (
               msg += msgForThisConstraint
             }
           }
-          // Json.parse(s).as[Seq[ModelElement]]
-
-          // // val elements: Map[String, Element] =
-          // //   (json \ "elements").as[Map[String,Element]]
-          // // // val jsonAst = json.toString // or JsonParser(source)
-
-          // // var outString = ""
-          // // for ((element, arrayOfProperties) <- elements)
-          // //   outString += (s"element: $element\n")
 
           Ok(
             "SCALA data:\n" + modelElements + "\r\n"
