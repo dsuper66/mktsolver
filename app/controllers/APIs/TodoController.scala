@@ -14,6 +14,7 @@ import solver.MathModel.ModelElement
 import solver.MathModel.ModelElements
 import solver.MathModel.ConstraintDef
 import solver.MathModel.ConstraintComp
+import solver.MathModel._
 
 class TodoController @Inject() (
     cc: ControllerComponents
@@ -152,16 +153,21 @@ class TodoController @Inject() (
               parentElement <-
                 modelElements.filter(_.elementType == constraintDef.elementType)
             ) {
+
+              //Constraint Id
               val constraintId =
                 s"${constraintDef.constraintId}.${parentElement.elementId}"
-              var rowVarFactors = Array.emptyDoubleArray
+              addConstraintIfNew(constraintId)
+              
 
               var msgForThisConstraint = (s"\n${parentElement.elementId} " +
                 s"has constraint: ${constraintDef.constraintId}\nwith components:\n")
 
-              //Does the parent element have a var in the constraint
+              //Variable Id... Does the parent element have a var in the constraint
               if (constraintDef.varType != "") {
-                msgForThisConstraint += s" 1* ${parentElement.elementId}.${constraintDef.varType}\n"
+                val varId = s"${parentElement.elementId}.${constraintDef.varType}"
+                addVarIfNew(varId)
+                msgForThisConstraint += s" +1* $varId\n"
               }
 
               //Get the constraint components
@@ -220,8 +226,11 @@ class TodoController @Inject() (
                       parentElement,
                       constraintDef.multProperty
                     ))
-
-                  msgForThisConstraint += s" $multiplier * ${childElement.elementId}.${constraintComp.varType} \n"
+                  
+                  //Variable Id
+                  val varId = s"${childElement.elementId}.${constraintComp.varType}"
+                  addVarIfNew(varId)
+                  msgForThisConstraint += s" $multiplier * $varId \n"
                 }
               } //done components
 
@@ -252,8 +261,8 @@ class TodoController @Inject() (
           }
 
           Ok(
-            "SCALA data:\n" + modelElements + "\r\n"
-              + "====\n" + constraintDefs + "\n====\n" + constraintComps + "\n====\n" + msg
+            (s"SCALA data:\n $modelElements\n====\n $constraintDefs \n====\n$constraintComps\n====\n  " +
+              s"$msg\n\n$constraintsString\n\n$varsString")
           )
         }
         .getOrElse {

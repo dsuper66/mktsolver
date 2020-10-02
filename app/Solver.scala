@@ -2,6 +2,7 @@ package solver
 
 import play.api.libs.json._
 
+//MathModel Module
 object MathModel {
 
   case class Element(elementId: String, bus: String)
@@ -34,7 +35,7 @@ object MathModel {
       multProperty: String
   )
 
- // case class Property(name: String, value: Any)
+  // case class Property(name: String, value: Any)
 
   object ModelElement {
 
@@ -75,5 +76,33 @@ object MathModel {
     //need Json deserializer for type
     implicit val reads = Json.reads[ConstraintComp]
   }
+
+  var colConstraintIds: Seq[String] = Seq()
+  var rowVarIds: Seq[String] = Seq()
+  var rowVarFactors: Seq[Double] = Seq()
+
+  def addConstraintIfNew(key: String): Unit = {
+    if (!colConstraintIds.contains(key)) {
+      colConstraintIds = colConstraintIds :+ key
+    }
+  }
+  def addVarIfNew(key: String): Unit = {
+    if (!rowVarIds.contains(key)) {
+      rowVarIds = rowVarIds :+ key
+    }
+  }  
+
+  def stringAll[X](x: X): String =
+    x match {
+      case arr: Array[_] => arr.map(stringAll).mkString("[", " ", "]")
+      case _             => x.toString
+    }
+
+    def constraintsString: String = {
+        colConstraintIds.mkString("\n")
+    }
+    def varsString: String = {
+        rowVarIds.mkString("\n")
+    }
 
 }

@@ -1307,3 +1307,32 @@ WARNING: Unmatched cancel notification for request id 20329
 2020.09.30 21:06:23 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-ExZwFwWbTASil3zh0HUejA==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
 2020.09.30 21:06:25 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-ExZwFwWbTASil3zh0HUejA==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
 2020.09.30 21:24:55 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/controllers/APIs/TodoController.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-ExZwFwWbTASil3zh0HUejA==/META-INF/semanticdb/app/controllers/APIs/TodoController.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+something's wrong: no file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala in Array[String]RangePosition(file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala, 2072, 2072, 2085)
+something's wrong: no file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala in Array[String]RangePosition(file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala, 2072, 2072, 2085)
+something's wrong: no file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala in Array[String]RangePosition(file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala, 2263, 2263, 2276)
+2020.10.01 22:43:56 ERROR scalafmt: /Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala:100: error: illegal start of simple expression
+}
+^
+2020.10.01 22:54:35 ERROR code navigation does not work for the file '/Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala' because the SemanticDB file '/Users/davidbullen/scala/play6/play-scala-seed/.bloop/root/bloop-bsp-clients-classes/classes-Metals-ExZwFwWbTASil3zh0HUejA==/META-INF/semanticdb/app/Solver.scala.semanticdb' doesn't exist. There can be many reasons for this error. 
+something's wrong: no file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala in Array[String]RangePosition(file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala, 2263, 2263, 2276)
+something's wrong: no file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala in Array[String]RangePosition(file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala, 2263, 2263, 2276)
+something's wrong: no file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala in Array[Double]RangePosition(file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala, 2033, 2033, 2046)
+something's wrong: no file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala in Array[String]RangePosition(file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala, 2070, 2070, 2083)
+Oct 02, 2020 11:04:57 PM scala.meta.internal.pc.CompletionProvider expected$1
+WARNING: null
+something's wrong: no file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala in Seq[String]RangePosition(file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala, 2214, 2214, 2225)
+something's wrong: no file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala in Seq[<error>]RangePosition(file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala, 2155, 2155, 2168)
+something's wrong: no file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala in Seq[<error>]RangePosition(file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala, 2155, 2155, 2161)
+something's wrong: no file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala in Seq[<error>]RangePosition(file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala, 2155, 2155, 2162)
+something's wrong: no file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala in Seq[<error>]RangePosition(file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala, 2155, 2155, 2163)
+something's wrong: no file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala in Seq[<error>]RangePosition(file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala, 2155, 2155, 2164)
+something's wrong: no file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala in Seq[<error>]RangePosition(file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala, 2155, 2155, 2165)
+something's wrong: no file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala in Seq[String]RangePosition(file:///Users/davidbullen/scala/play6/play-scala-seed/app/Solver.scala, 2155, 2155, 2166)
+Oct 03, 2020 9:41:46 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+Oct 03, 2020 9:41:46 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+Oct 03, 2020 9:41:50 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+Oct 03, 2020 9:41:50 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
