@@ -35,6 +35,11 @@ object MathModel {
       multProperty: String
   )
 
+  case class VarFactor(
+      varId: String,
+      constraintId: String,
+      value: Double
+  )
   // case class Property(name: String, value: Any)
 
   object ModelElement {
@@ -80,7 +85,9 @@ object MathModel {
   var colConstraintIds: Seq[String] = Seq()
   var rowVarIds: Seq[String] = Seq()
   var rowVarFactors: Seq[Double] = Seq()
+  var varFactors: Seq[VarFactor] = Seq()
 
+  //Populating values
   def addConstraintIfNew(key: String): Unit = {
     if (!colConstraintIds.contains(key)) {
       colConstraintIds = colConstraintIds :+ key
@@ -90,19 +97,25 @@ object MathModel {
     if (!rowVarIds.contains(key)) {
       rowVarIds = rowVarIds :+ key
     }
-  }  
+  }
+  def setVarFactor(
+      varId: String,
+      constraintId: String,
+      value: Double      
+  ): Unit = {
+    varFactors = varFactors.filter(v => !(v.varId == varId && v.constraintId == constraintId))
+    varFactors = varFactors :+ VarFactor(varId,constraintId,value)
+  }
 
-  def stringAll[X](x: X): String =
-    x match {
-      case arr: Array[_] => arr.map(stringAll).mkString("[", " ", "]")
-      case _             => x.toString
-    }
-
-    def constraintsString: String = {
-        colConstraintIds.mkString("\n")
-    }
-    def varsString: String = {
-        rowVarIds.mkString("\n")
-    }
+//Reporting
+  def constraintsString: String = {
+    colConstraintIds.mkString("\n")
+  }
+  def varsString: String = {
+    rowVarIds.mkString("\n")
+  }
+  def varFactorsString: String = {
+    varFactors.map(_.toString).mkString("\n")
+  }
 
 }
