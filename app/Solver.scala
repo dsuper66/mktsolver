@@ -16,7 +16,7 @@ object MathModel {
   case class ModelElements(modelElements: Seq[ModelElement])
 
   case class ConstraintDef(
-      constraintId: String,
+      constraintType: String,
       elementType: String,
       varType: String,
       inEquality: String,
@@ -26,7 +26,7 @@ object MathModel {
   )
 
   case class ConstraintComp(
-      constraintId: String,
+      constraintType: String,
       elementType: String,
       propertyMap: String,
       varType: String,
@@ -35,15 +35,9 @@ object MathModel {
       multProperty: String
   )
 
-  case class VarFactor(
-      varId: String,
-      constraintId: String,
-      value: Double
-  )
   // case class Property(name: String, value: Any)
 
   object ModelElement {
-
     //Reads looks for this implicit which tells it how to read [String,Any]
     implicit val readsMap =
       Reads[Map[String, Any]](m => Reads.mapReads[Any](anyReads).reads(m))
@@ -71,51 +65,76 @@ object MathModel {
     //Json deserialiser for ModelElement (and needs to be after the above implicit for Reads)
     implicit val reads = Json.reads[ModelElement]
   }
-
   object ConstraintDef {
     //need Json deserializer for type
     implicit val reads = Json.reads[ConstraintDef]
   }
-
   object ConstraintComp {
     //need Json deserializer for type
     implicit val reads = Json.reads[ConstraintComp]
   }
 
-  var colConstraintIds: Seq[String] = Seq()
-  var rowVarIds: Seq[String] = Seq()
+  //Solver Defs
+  case class VarFactor(
+                        varId: String,
+                        constraintId: String,
+                        value: Double
+                      )
+  case class Constraint(
+                       constraintType: String,
+                       elementId: String
+                       )
+  case class Variable(
+                         varType: String,
+                         elementId: String
+                       )
+
+  //Data
+  var constraintIds: Seq[String] = Seq()
+  var varIds: Seq[String] = Seq()
+
   var rowVarFactors: Seq[Double] = Seq()
   var varFactors: Seq[VarFactor] = Seq()
+  var constraints: Seq[Constraint] = Seq()
+  var variables: Seq[Variable] = Seq()
 
-  //Populating values
+  //Populate
   def addConstraintIfNew(key: String): Unit = {
-    if (!colConstraintIds.contains(key)) {
-      colConstraintIds = colConstraintIds :+ key
+    if (!constraintIds.contains(key)) {
+      constraintIds = constraintIds :+ key
     }
   }
   def addVarIfNew(key: String): Unit = {
-    if (!rowVarIds.contains(key)) {
-      rowVarIds = rowVarIds :+ key
+    if (!varIds.contains(key)) {
+      varIds = varIds :+ key
     }
   }
   def setVarFactor(
       varId: String,
       constraintId: String,
-      value: Double      
+      value: Double
   ): Unit = {
     varFactors = varFactors.filter(v => !(v.varId == varId && v.constraintId == constraintId))
     varFactors = varFactors :+ VarFactor(varId,constraintId,value)
   }
 
-//Reporting
+//Report
   def constraintsString: String = {
-    colConstraintIds.mkString("\n")
+    constraintIds.mkString("\n")
   }
   def varsString: String = {
-    rowVarIds.mkString("\n")
+    varIds.mkString("\n")
   }
   def varFactorsString: String = {
     varFactors.map(_.toString).mkString("\n")
+  }
+
+  //Solve
+  def solve: Unit = {
+    //Create the matrix of constraint rows and var columns
+//    for (constraintId <- constraintIds.filter){
+//      
+//    }
   }
 
 }
