@@ -82,7 +82,9 @@ object MathModel {
                       )
   case class Constraint(
                        constraintType: String,
-                       elementId: String
+                       elementId: String,
+                       inequality: String,
+                       rhsValue: Double
                        )
   case class Variable(
                          varType: String,
@@ -100,22 +102,31 @@ object MathModel {
 
   //Populate
   def addConstraintIfNew(key: String): Unit = {
-    if (!constraintIds.contains(key)) {
-      constraintIds = constraintIds :+ key
-    }
+    if (!constraintIds.contains(key)) constraintIds = constraintIds :+ key
   }
   def addVarIfNew(key: String): Unit = {
-    if (!varIds.contains(key)) {
-      varIds = varIds :+ key
-    }
+    if (!varIds.contains(key)) varIds = varIds :+ key
   }
+  def addConstraint(constraintType: String,elementId: String,inEquality: String,rhsValue: Double): String = {
+    val constraint = Constraint(constraintType,elementId,inEquality,rhsValue)
+    if (!constraints.contains(constraint)) constraints = constraints :+ constraint
+    s"${constraintType}.${elementId}"
+  }
+  def addVar(elementId: String,varType: String): String = {
+    val mathVar = Variable(varType,elementId)
+    if (!variables.contains(mathVar)) variables = variables :+ mathVar
+    s"${elementId}.${varType}"
+  }
+
   def setVarFactor(
       varId: String,
       constraintId: String,
       value: Double
   ): Unit = {
-    varFactors = varFactors.filter(v => !(v.varId == varId && v.constraintId == constraintId))
-    varFactors = varFactors :+ VarFactor(varId,constraintId,value)
+    val varFactor = VarFactor(varId,constraintId,value)
+    if (!varFactors.contains(varFactor)) varFactors = varFactors :+ varFactor
+//    varFactors = varFactors.filter(v => !(v.varId == varId && v.constraintId == constraintId))
+//    varFactors = varFactors :+ VarFactor(varId,constraintId,value)
   }
 
 //Report
@@ -133,7 +144,7 @@ object MathModel {
   def solve: Unit = {
     //Create the matrix of constraint rows and var columns
 //    for (constraintId <- constraintIds.filter){
-//      
+//
 //    }
   }
 

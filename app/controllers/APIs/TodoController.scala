@@ -11,9 +11,9 @@ import play.api.mvc._
 
 import solver.MathModel.{ConstraintComp, ConstraintDef, ModelElement, _}
 
-class TodoController @Inject() (
-    cc: ControllerComponents
-) extends AbstractController(cc) {
+class TodoController @Inject()(
+                                cc: ControllerComponents
+                              ) extends AbstractController(cc) {
 
   implicit val todoFormat = Json.format[Todo]
 
@@ -24,9 +24,9 @@ class TodoController @Inject() (
     }
 
   def getPropertyAsDoubleOrOne(
-      element: ModelElement,
-      propertyType: String
-  ): Double = {
+                                element: ModelElement,
+                                propertyType: String
+                              ): Double = {
 
     val matchingProperty = element.properties.find(property => property._1 == propertyType)
 
@@ -64,21 +64,24 @@ class TodoController @Inject() (
                 modelElements.filter(_.elementType == constraintDef.elementType)
             ) {
 
-              //Constraint Id
-              val constraintId =
-                s"${constraintDef.constraintType}.${parentElement.elementId}"
-              addConstraintIfNew(constraintId)
-              
+              //Constraint
+              //LE or EQ
+              val inEquality = constraintDef.inEquality
+              //RHS
+              val rhsValue = 0.0
+              //Add the constraint entry
+              val constraintId = addConstraint(constraintDef.constraintType,parentElement.elementId,inEquality,rhsValue)
 
               var msgForThisConstraint = s"\n${parentElement.elementId} " +
                 s"has constraint: ${constraintDef.constraintType}\nwith components:\n"
 
               //Var Id... Does the parent element have a var in the constraint
               if (constraintDef.varType != "") {
-                val varId = s"${parentElement.elementId}.${constraintDef.varType}"
+                //                val varId = s"${parentElement.elementId}.${constraintDef.varType}"
+                val varId = addVar(parentElement.elementId, constraintDef.varType)
                 val varFactor = 1.0
-                addVarIfNew(varId)
-                setVarFactor(varId,constraintId,varFactor)
+                //                addVarIfNew(varId)
+                setVarFactor(varId, constraintId, varFactor)
                 msgForThisConstraint += s" $varFactor * $varId\n"
               }
 
@@ -87,7 +90,7 @@ class TodoController @Inject() (
                 constraintComp <- constraintComps.filter(
                   _.constraintType == constraintDef.constraintType
                 )
-              ) {
+                    ) {
                 //Get component elements where their elementType matches AND their property
                 //as specified by propertyMap matches the constraintDef parent element
                 //(case classes are especially useful for pattern matching...)
@@ -101,17 +104,17 @@ class TodoController @Inject() (
                   childElement <-
                     childElementsMatchingType
                       .filter(childElementMatching =>
-                        ( //parent matches propertyMap from child
+                        (//parent matches propertyMap from child
                           (constraintComp.propertyMap == "all") //all bids and offers are in objective
                             ||
-                              childElementMatching.properties.exists(property =>
-                                (property._1 == constraintComp.propertyMap
-                                  && property._2 == parentElement.elementId))
+                            childElementMatching.properties.exists(property =>
+                              (property._1 == constraintComp.propertyMap
+                                && property._2 == parentElement.elementId))
                             || //or child matches propertyMap from parent
-                              parentElement.properties.exists(property =>
-                                property._1 == constraintComp.propertyMap
-                                  && property._2 == childElementMatching.elementId)
-                        )
+                            parentElement.properties.exists(property =>
+                              property._1 == constraintComp.propertyMap
+                                && property._2 == childElementMatching.elementId)
+                          )
                       )
                 ) {
                   //The varFactor for the component
@@ -121,29 +124,28 @@ class TodoController @Inject() (
                   //or the multParentProperty of the child
                   varFactor = (varFactor
                     * getPropertyAsDoubleOrOne(
-                      childElement,
-                      constraintComp.multProperty
-                    )
+                    childElement,
+                    constraintComp.multProperty
+                  )
                     * getPropertyAsDoubleOrOne(
-                      parentElement,
-                      constraintComp.multParentProperty
-                    )
+                    parentElement,
+                    constraintComp.multParentProperty
+                  )
                     * getPropertyAsDoubleOrOne(
-                      parentElement,
-                      constraintDef.multProperty
-                    ))
-                  
+                    parentElement,
+                    constraintDef.multProperty
+                  ))
+
                   //Var Id
-                  val varId = s"${childElement.elementId}.${constraintComp.varType}"
-                  addVarIfNew(varId)
-                  setVarFactor(varId,constraintId,varFactor)
+                  //val varId = s"${childElement.elementId}.${constraintComp.varType}"
+                  val varId = addVar(childElement.elementId, constraintComp.varType)
+                  //                  addVarIfNew(varId)
+                  setVarFactor(varId, constraintId, varFactor)
 
                   msgForThisConstraint += s" $varFactor * $varId \n"
                 }
               } //done components
 
-              //LE or EQ
-              val inEquality = constraintDef.inEquality
               msgForThisConstraint += s" $inEquality"
 
               //RHS
@@ -152,7 +154,6 @@ class TodoController @Inject() (
                 val rhsValueFromProperty = parentElement.properties.find {
                   case (name, value) => name == constraintDef.rhsProperty
                 }
-
                 if (rhsValueFromProperty.isDefined) {
                   msgForThisConstraint += s" ${rhsValueFromProperty.get._2}"
                 } else { //Error if the RHS property is missing (constraint not created)
@@ -160,7 +161,7 @@ class TodoController @Inject() (
                     s"\n ERROR ${constraintDef.constraintType} " +
                       s"for ${parentElement.elementId} has RHS ${constraintDef.rhsProperty} but property not found"
                 }
-              } else { //RHS from value
+              } else { //RHS is from specified value
                 msgForThisConstraint += s" ${constraintDef.rhsValue}"
               }
 
