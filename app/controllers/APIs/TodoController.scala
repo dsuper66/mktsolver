@@ -17,11 +17,11 @@ class TodoController @Inject()(
 
   implicit val todoFormat = Json.format[Todo]
 
-//  def getAll =
-//    Action {
-//      val todo = new Todo(1, "item 1", false)
-//      Ok(Json.toJson(todo))
-//    }
+  def getAll =
+    Action {
+      val todo = Todo(1, "item 1", false)
+      Ok(Json.toJson(todo))
+    }
 
   def getPropertyAsDoubleOrOne(
                                 element: ModelElement,
@@ -55,7 +55,7 @@ class TodoController @Inject()(
             (json \ "constraintComps").as[Seq[ConstraintComp]]
 
           var msg = ""
-          resetMathModel
+          resetMathModel()
 
           //Constraint Defs
           for (constraintDef <- constraintDefs) {
