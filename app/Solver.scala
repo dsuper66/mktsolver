@@ -102,7 +102,9 @@ object MathModel {
   var varIds: Seq[String] = Seq()
 
   var varFactorRows: Seq[Seq[Double]] = Seq()
-  var varFactors: Seq[VarFactor] = Seq()
+  //Var factor inputs are used to create varFactor rows
+  //which are then related to c and v by row and col
+  var varFactorInputs: Seq[VarFactor] = Seq()
   var constraints: Seq[Constraint] = Seq()
   var variables: Seq[Variable] = Seq()
   var reducedCosts: Seq[Double] = Seq()
@@ -114,17 +116,17 @@ object MathModel {
   //  def addVarIfNew(key: String): Unit = {
   //    if (!varIds.contains(key)) varIds = varIds :+ key
   //  }
-  def addConstraint(constraintType: String, elementId: String, inEquality: String, rhsValue: Double): String = {
+  def addConstraint(constraintType: String, elementId: String, inequality: String, rhsValue: Double): String = {
     val constraintId = s"$constraintType.$elementId"
     if (!constraints.exists(c => c.constraintId == constraintId)) {
-      constraints = constraints :+ Constraint(constraintId, constraintType, elementId, inEquality, rhsValue)
+      constraints = constraints :+ Constraint(constraintId, constraintType, elementId, inequality, rhsValue)
     }
     constraintId
   }
 
   def addVar(elementId: String, varType: String): String = {
     val varId = s"$elementId.$varType"
-    if (!variables.exists(mathVar => mathVar.varId == varId)) {
+    if (!variables.exists(v => v.varId == varId)) {
       variables = variables :+ Variable(varId, varType, elementId)
     }
     varId
@@ -136,7 +138,7 @@ object MathModel {
                     value: Double
                   ): Unit = {
     val varFactor = VarFactor(varId, constraintId, value)
-    if (!varFactors.contains(varFactor)) varFactors = varFactors :+ varFactor
+    if (!varFactorInputs.contains(varFactor)) varFactorInputs = varFactorInputs :+ varFactor
     //    varFactors = varFactors.filter(v => !(v.varId == varId && v.constraintId == constraintId))
     //    varFactors = varFactors :+ VarFactor(varId,constraintId,value)
   }
@@ -149,13 +151,13 @@ object MathModel {
     varIds.mkString("\n")
   }
   def varFactorsString: String = {
-    varFactors.map(_.toString).mkString("\n")
+    varFactorInputs.map(_.toString).mkString("\n")
   }
 
   def varFactorsForConstraint(c: Constraint): Seq[Double] = {
     //If there is a varFactor for this constraint+var then add it otherwise add zero
     variables.map(v =>
-      varFactors.find(vF => (vF.varId, vF.constraintId) == (v.varId, c.constraintId))
+      varFactorInputs.find(vF => (vF.varId, vF.constraintId) == (v.varId, c.constraintId))
       match {
         case Some(optVF) => optVF.value
         case None => 0.0
@@ -188,17 +190,21 @@ object MathModel {
     }
 
     //Convert EQ constraints into LTE and GTE
-    /*
-    val convertedConstraints = constraints.map(c =>
-      if (c.constraintType == "EQ") {
-
+    var constraintsWithEq: Seq[Constraint] = Seq()
+    for (c <- constraints.filter(c => c.constraintType != "objective")) {
+      constraintsWithEq = constraintsWithEq ++ {
+        c.inequality
+        match {
+          case "eq" => Seq(Constraint(s"${c.constraintId}.LTE", c.constraintType, c.elementId, c.inequality, c.rhsValue),
+            Constraint(s"${c.constraintId}.GTE", c.constraintType, c.elementId, c.inequality, c.rhsValue))
+          case _ => Seq(c)
+        }
       }
-      else {
-        c
-      }
-    )*/
+    }
+    constraints = constraintsWithEq
 
-    s"${varFactorRows.map(_.toString).mkString("\n")} \nobjective\n${reducedCosts.toString()}"
+    s"${varFactorRows.map(_.toString).mkString("\n")} \nobjective\n${reducedCosts.toString()} " +
+      s"\nconstraints\n${constraints.map(_.toString).mkString("\n")}"
   }
 
 }
