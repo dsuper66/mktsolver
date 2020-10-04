@@ -71,7 +71,7 @@ object MathModel {
 
   object ConstraintComp {
     //need Json deserializer for type
-    implicit val reads = Json.reads[ConstraintComp]
+    implicit val reads: Reads[ConstraintComp] = Json.reads[ConstraintComp]
   }
 
   //Solver Definitions
@@ -106,6 +106,7 @@ object MathModel {
   var constraints: Seq[Constraint] = Seq()
   var variables: Seq[Variable] = Seq()
   var reducedCosts: Seq[Double] = Seq()
+  var rhsValues: Seq[Double] = Seq()
 
   //Populate
   //  def addConstraintIfNew(key: String): Unit = {
@@ -114,12 +115,13 @@ object MathModel {
   //  def addVarIfNew(key: String): Unit = {
   //    if (!varIds.contains(key)) varIds = varIds :+ key
   //  }
-  def resetMathModel() = {
+  def resetMathModel(): Unit = {
     varFactorRows = Seq()
     varFactorInputs = Seq()
     constraints = Seq()
     variables = Seq()
     reducedCosts = Seq()
+    rhsValues = Seq()
 
   }
 
@@ -175,20 +177,14 @@ object MathModel {
   //Solve
   def solveModel: String = {
     //Reduced costs for the objective
-    //and a row of varFactors for each constraint
+    //and varFactors for each constraint
     //    for (c <- constraints.filter(_.constraintType != "objective")) {
     for (c <- constraints) {
+      //Objective
       if (c.constraintType == "objective") { //expecting only one
         reducedCosts = varFactorsForConstraint(c)
       }
-      //If there is a varFactor for this constraint+var then add it otherwise add zero
-      //      val varFactorRow = variables.map(v =>
-      //        varFactors.find(vF => (vF.varId, vF.constraintId) == (v.varId, c.constraintId))
-      //        match {
-      //          case Some(optVF) => optVF.value
-      //          case None => 0.0
-      //        }
-      //      )
+        //Constraints
       else {
         varFactorRows :+= varFactorsForConstraint(c)
         //EQ has corresponding GTE
@@ -209,9 +205,20 @@ object MathModel {
       }
     }
     constraints = constraintsWithEq
+    rhsValues = constraints.map(c => c.rhsValue)
+
+    //Add slack vars
+
+    //Record basic constraintRows
+
+    var minReducedCost = reducedCosts.min
+//    while (minReducedCost < 0){
+      val enteringVarCol = reducedCosts.indexOf(minReducedCost)
+
+//    }
 
     s"${varFactorRows.map(_.toString).mkString("\n")} \nobjective\n${reducedCosts.toString()} " +
-      s"\nconstraints\n${constraints.map(_.toString).mkString("\n")}"
+      s"\nconstraints\n${constraints.map(_.toString).mkString("\n")}\nenteringVarCol: $enteringVarCol"
   }
 
 }
