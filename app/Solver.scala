@@ -62,7 +62,7 @@ object MathModel {
       }
     }
 
-    //Json deserialiser for ModelElement (and needs to be after the above implicit for Reads)
+    //Json deserializer for ModelElement (and needs to be after the above implicit for Reads)
     implicit val reads = Json.reads[ModelElement]
   }
 
@@ -76,7 +76,7 @@ object MathModel {
     implicit val reads = Json.reads[ConstraintComp]
   }
 
-  //Solver Defs
+  //Solver Definitions
   case class VarFactor(
                         varId: String,
                         constraintId: String,
@@ -115,7 +115,7 @@ object MathModel {
   //    if (!varIds.contains(key)) varIds = varIds :+ key
   //  }
   def addConstraint(constraintType: String, elementId: String, inEquality: String, rhsValue: Double): String = {
-    val constraintId = s"${constraintType}.${elementId}"
+    val constraintId = s"$constraintType.$elementId"
     if (!constraints.exists(c => c.constraintId == constraintId)) {
       constraints = constraints :+ Constraint(constraintId, constraintType, elementId, inEquality, rhsValue)
     }
@@ -123,7 +123,7 @@ object MathModel {
   }
 
   def addVar(elementId: String, varType: String): String = {
-    val varId = s"${elementId}.${varType}"
+    val varId = s"$elementId.$varType"
     if (!variables.exists(mathVar => mathVar.varId == varId)) {
       variables = variables :+ Variable(varId, varType, elementId)
     }
@@ -145,11 +145,9 @@ object MathModel {
   def constraintsString: String = {
     constraintIds.mkString("\n")
   }
-
   def varsString: String = {
     varIds.mkString("\n")
   }
-
   def varFactorsString: String = {
     varFactors.map(_.toString).mkString("\n")
   }
@@ -184,8 +182,22 @@ object MathModel {
       //      )
       else {
         varFactorRows :+= varFactorsForConstraint(c)
+        //EQ has corresponding GTE
+        if (c.inequality == "eq") varFactorRows :+= varFactorsForConstraint(c).map(vF => if (vF != 0) -vF else 0.0 )
       }
     }
+
+    //Convert EQ constraints into LTE and GTE
+    /*
+    val convertedConstraints = constraints.map(c =>
+      if (c.constraintType == "EQ") {
+
+      }
+      else {
+        c
+      }
+    )*/
+
     s"${varFactorRows.map(_.toString).mkString("\n")} \nobjective\n${reducedCosts.toString()}"
   }
 
