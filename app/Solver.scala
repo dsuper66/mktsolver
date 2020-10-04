@@ -81,13 +81,15 @@ object MathModel {
                         value: Double
                       )
   case class Constraint(
+                       constraintId: String,
                        constraintType: String,
                        elementId: String,
                        inequality: String,
                        rhsValue: Double
                        )
   case class Variable(
-                         varType: String,
+                       varId: String,
+                       varType: String,
                          elementId: String
                        )
 
@@ -95,27 +97,31 @@ object MathModel {
   var constraintIds: Seq[String] = Seq()
   var varIds: Seq[String] = Seq()
 
-  var rowVarFactors: Seq[Double] = Seq()
+  var varFactorRows: Seq[Seq[Double]] = Seq()
   var varFactors: Seq[VarFactor] = Seq()
   var constraints: Seq[Constraint] = Seq()
   var variables: Seq[Variable] = Seq()
 
   //Populate
-  def addConstraintIfNew(key: String): Unit = {
-    if (!constraintIds.contains(key)) constraintIds = constraintIds :+ key
-  }
-  def addVarIfNew(key: String): Unit = {
-    if (!varIds.contains(key)) varIds = varIds :+ key
-  }
+//  def addConstraintIfNew(key: String): Unit = {
+//    if (!constraintIds.contains(key)) constraintIds = constraintIds :+ key
+//  }
+//  def addVarIfNew(key: String): Unit = {
+//    if (!varIds.contains(key)) varIds = varIds :+ key
+//  }
   def addConstraint(constraintType: String,elementId: String,inEquality: String,rhsValue: Double): String = {
-    val constraint = Constraint(constraintType,elementId,inEquality,rhsValue)
-    if (!constraints.contains(constraint)) constraints = constraints :+ constraint
-    s"${constraintType}.${elementId}"
+    val constraintId = s"${constraintType}.${elementId}"
+    if (!constraints.exists(c => c.constraintId == constraintId)) {
+      constraints = constraints :+ Constraint(constraintId,constraintType,elementId,inEquality,rhsValue)
+    }
+    constraintId
   }
   def addVar(elementId: String,varType: String): String = {
-    val mathVar = Variable(varType,elementId)
-    if (!variables.contains(mathVar)) variables = variables :+ mathVar
-    s"${elementId}.${varType}"
+    val varId = s"${elementId}.${varType}"
+    if (!variables.exists(mathVar => mathVar.varId == varId)) {
+      variables = variables :+ Variable(varId,varType,elementId)
+    }
+    varId
   }
 
   def setVarFactor(
@@ -141,11 +147,20 @@ object MathModel {
   }
 
   //Solve
-  def solve: Unit = {
-    //Create the matrix of constraint rows and var columns
-//    for (constraintId <- constraintIds.filter){
-//
-//    }
+  def solveModel: String = {
+    //A row of varFactors for each constraint
+    for (c <- constraints.filter(_.constraintType != "objective")) {
+      //If there is a varFactor for this constraint+var then add it otherwise add zero
+      val varFactorRow = variables.map(v =>
+        varFactors.find(vF => (vF.varId, vF.constraintId) == (v.varId, c.constraintId))
+        match {
+          case Some(optVF) => optVF.value
+          case None => 0.0
+        }
+      )
+      varFactorRows = varFactorRows :+ varFactorRow
+    }
+    varFactorRows.map(_.toString).mkString("\n")
   }
 
 }
