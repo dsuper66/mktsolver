@@ -114,6 +114,15 @@ object MathModel {
   //  def addVarIfNew(key: String): Unit = {
   //    if (!varIds.contains(key)) varIds = varIds :+ key
   //  }
+  def resetMathModel() = {
+    varFactorRows = Seq()
+    varFactorInputs = Seq()
+    constraints = Seq()
+    variables = Seq()
+    reducedCosts = Seq()
+
+  }
+
   def addConstraint(constraintType: String, elementId: String, inequality: String, rhsValue: Double): String = {
     val constraintId = s"$constraintType.$elementId"
     if (!constraints.exists(c => c.constraintId == constraintId)) {

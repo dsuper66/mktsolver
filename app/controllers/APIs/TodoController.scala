@@ -17,11 +17,11 @@ class TodoController @Inject()(
 
   implicit val todoFormat = Json.format[Todo]
 
-  def getAll =
-    Action {
-      val todo = new Todo(1, "item 1", false)
-      Ok(Json.toJson(todo))
-    }
+//  def getAll =
+//    Action {
+//      val todo = new Todo(1, "item 1", false)
+//      Ok(Json.toJson(todo))
+//    }
 
   def getPropertyAsDoubleOrOne(
                                 element: ModelElement,
@@ -55,6 +55,7 @@ class TodoController @Inject()(
             (json \ "constraintComps").as[Seq[ConstraintComp]]
 
           var msg = ""
+          resetMathModel
 
           //Constraint Defs
           for (constraintDef <- constraintDefs) {
@@ -74,7 +75,7 @@ class TodoController @Inject()(
               //check if RHS is a property of the parent element
               if (constraintDef.rhsProperty != "") {
                 val rhsValueFromProperty = parentElement.properties.find {
-                  case (name, value) => name == constraintDef.rhsProperty
+                  case (name, _) => name == constraintDef.rhsProperty
                 }
                 if (rhsValueFromProperty.isDefined) {
                   rhsValue = rhsValueFromProperty.get._2.toString.toDouble
