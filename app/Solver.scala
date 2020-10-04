@@ -49,16 +49,14 @@ object MathModel {
         case JsBoolean(b) => JsSuccess(b)
         case JsNumber(n) => JsSuccess(n)
         case JsString(s) => JsSuccess(s)
-        case JsArray(arr) => {
+        case JsArray(arr) =>
           val list = arr.map(metaValueToJsValue)
           JsSuccess(list)
-        }
         case JsNull => JsSuccess(null)
         //case x => JsFailure(x.toString())
-        case JsObject(m) => {
+        case JsObject(m) =>
           val m1 = m.map(f => (f._1, metaValueToJsValue(f._2))).toMap
           JsSuccess(m1)
-        }
       }
     }
 
