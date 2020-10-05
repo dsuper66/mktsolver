@@ -103,7 +103,10 @@ object MathModel {
   //Var factor inputs are used to create varFactor rows
   //which are then related to c and v by row and col
   var varFactorInputs: Seq[VarFactor] = Seq()
+
   var constraints: Seq[Constraint] = Seq()
+  var objectiveFn: Constraint = Constraint("","","","",0.0)
+
   var variables: Seq[Variable] = Seq()
   var reducedCosts: Seq[Double] = Seq()
   var rhsValues: Seq[Double] = Seq()
@@ -122,13 +125,19 @@ object MathModel {
     variables = Seq()
     reducedCosts = Seq()
     rhsValues = Seq()
+    objectiveFn = Constraint("","","","",0.0)
+
 
   }
 
   def addConstraint(constraintType: String, elementId: String, inequality: String, rhsValue: Double): String = {
     val constraintId = s"$constraintType.$elementId"
-    if (!constraints.exists(c => c.constraintId == constraintId)) {
-      constraints = constraints :+ Constraint(constraintId, constraintType, elementId, inequality, rhsValue)
+    val newC = Constraint(constraintId, constraintType, elementId, inequality, rhsValue)
+    if (constraintType == "objective") {
+      objectiveFn = newC
+    }
+    else if (!constraints.exists(c => c.constraintId == constraintId)) {
+      constraints = constraints :+ newC
     }
     constraintId
   }
@@ -177,24 +186,18 @@ object MathModel {
   //Solve
   def solveModel: String = {
     //Reduced costs for the objective
-    //and varFactors for each constraint
-    //    for (c <- constraints.filter(_.constraintType != "objective")) {
+    reducedCosts = varFactorsForConstraint(objectiveFn)
+
+    //VarFactors for each constraint
     for (c <- constraints) {
-      //Objective
-      if (c.constraintType == "objective") { //expecting only one
-        reducedCosts = varFactorsForConstraint(c)
-      }
-        //Constraints
-      else {
         varFactorRows :+= varFactorsForConstraint(c)
         //EQ has corresponding GTE
         if (c.inequality == "eq") varFactorRows :+= varFactorsForConstraint(c).map(vF => if (vF != 0) -vF else 0.0 )
-      }
     }
 
     //Convert EQ constraints into LTE and GTE
     var constraintsWithEq: Seq[Constraint] = Seq()
-    for (c <- constraints.filter(c => c.constraintType != "objective")) {
+    for (c <- constraints) {
       constraintsWithEq = constraintsWithEq ++ {
         c.inequality
         match {
@@ -205,9 +208,13 @@ object MathModel {
       }
     }
     constraints = constraintsWithEq
+
+    //RHS
     rhsValues = constraints.map(c => c.rhsValue)
 
     //Add slack vars
+    varFactorRows = varFactorRows.map(
+      row => row ++ Seq.tabulate(constraints.length)(col => if (col == varFactorRows.indexOf(row)) 1.0 else 0.0))
 
     //Record basic constraintRows
 
