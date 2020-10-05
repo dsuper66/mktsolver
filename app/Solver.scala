@@ -110,6 +110,7 @@ object MathModel {
   var variables: Seq[Variable] = Seq()
   var reducedCosts: Seq[Double] = Seq()
   var rhsValues: Seq[Double] = Seq()
+  var basicColIndexForRow: Seq[Int] = Seq()
 
   //Populate
   //  def addConstraintIfNew(key: String): Unit = {
@@ -126,7 +127,7 @@ object MathModel {
     reducedCosts = Seq()
     rhsValues = Seq()
     objectiveFn = Constraint("","","","",0.0)
-
+    basicColIndexForRow = Seq()
 
   }
 
@@ -212,11 +213,15 @@ object MathModel {
     //RHS
     rhsValues = constraints.map(c => c.rhsValue)
 
-    //Add slack vars
+    //Add slack vars...
+    //to varFactors
     varFactorRows = varFactorRows.map(
       row => row ++ Seq.tabulate(constraints.length)(col => if (col == varFactorRows.indexOf(row)) 1.0 else 0.0))
+    //to reducedCosts
+    reducedCosts = reducedCosts ++ Seq.fill(constraints.length)(0.0)
 
-    //Record basic constraintRows
+    //Record index of basic col
+    basicColIndexForRow = Seq.tabulate(constraints.length)(col => constraints.length + col - 1)
 
     var minReducedCost = reducedCosts.min
 //    while (minReducedCost < 0){
@@ -224,8 +229,9 @@ object MathModel {
 
 //    }
 
-    s"${varFactorRows.map(_.toString).mkString("\n")} \nobjective\n${reducedCosts.toString()} " +
-      s"\nconstraints\n${constraints.map(_.toString).mkString("\n")}\nenteringVarCol: $enteringVarCol"
+    s"${varFactorRows.map(_.toString).mkString("\n")} \nreduced costs\n${reducedCosts.toString()} " +
+      s"\nconstraints\n${constraints.map(_.toString).mkString("\n")}\nenteringVarCol: $enteringVarCol" +
+      s"\nbasic cols: $basicColIndexForRow"
   }
 
 }
