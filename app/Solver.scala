@@ -214,10 +214,10 @@ object MathModel {
     rhsValues = constraints.map(c => c.rhsValue)
 
     //Add slack vars...
-    //to varFactors
+    //...varFactors rows
     varFactorRows = varFactorRows.map(
       row => row ++ Seq.tabulate(constraints.length)(col => if (col == varFactorRows.indexOf(row)) 1.0 else 0.0))
-    //to reducedCosts
+    //...reducedCosts row
     reducedCosts = reducedCosts ++ Seq.fill(constraints.length)(0.0)
 
     //Record index of basic col
@@ -225,13 +225,21 @@ object MathModel {
 
     var minReducedCost = reducedCosts.min
 //    while (minReducedCost < 0){
-      val enteringVarCol = reducedCosts.indexOf(minReducedCost)
+    val enteringCol = reducedCosts.indexOf(minReducedCost)
+    val varFactorCol = varFactorRows.map(row => row(enteringCol))
+    val enteringRow = varFactorCol.zipWithIndex.filter(
+      vF => vF._1 > 0).minBy(vF => rhsValues(vF._2)/vF._1)._2
 
-//    }
 
-    s"${varFactorRows.map(_.toString).mkString("\n")} \nreduced costs\n${reducedCosts.toString()} " +
-      s"\nconstraints\n${constraints.map(_.toString).mkString("\n")}\nenteringVarCol: $enteringVarCol" +
-      s"\nbasic cols: $basicColIndexForRow"
-  }
+        //            case 0 => 0
+        //          }
+        //          rhsValues(varFactorRows.indexOf(row))/row(enteringVarCol)
+        //        }).filter(ratio => ratio >= 0.0).min
+        //    }
+
+        s"${varFactorRows.map(_.toString).mkString("\n")} \nreduced costs\n${reducedCosts.toString()} " +
+          s"\nconstraints\n${constraints.map(_.toString).mkString("\n")}\nenteringVarCol: $enteringCol" +
+          s"\nbasic cols: $basicColIndexForRow\nrhs: $rhsValues\nvarFactorCol: $varFactorCol\nentering row: $enteringRow"
+    }
 
 }
