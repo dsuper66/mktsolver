@@ -105,7 +105,7 @@ object MathModel {
   var varFactorInputs: Seq[VarFactor] = Seq()
 
   var constraints: Seq[Constraint] = Seq()
-  var objectiveFn: Constraint = Constraint("","","","",0.0)
+  var objectiveFn: Constraint = Constraint("", "", "", "", 0.0)
 
   var variables: Seq[Variable] = Seq()
   var reducedCosts: Seq[Double] = Seq()
@@ -113,12 +113,6 @@ object MathModel {
   var basicColIndexForRow: Seq[Int] = Seq()
 
   //Populate
-  //  def addConstraintIfNew(key: String): Unit = {
-  //    if (!constraintIds.contains(key)) constraintIds = constraintIds :+ key
-  //  }
-  //  def addVarIfNew(key: String): Unit = {
-  //    if (!varIds.contains(key)) varIds = varIds :+ key
-  //  }
   def resetMathModel(): Unit = {
     varFactorRows = Seq()
     varFactorInputs = Seq()
@@ -126,7 +120,7 @@ object MathModel {
     variables = Seq()
     reducedCosts = Seq()
     rhsValues = Seq()
-    objectiveFn = Constraint("","","","",0.0)
+    objectiveFn = Constraint("", "", "", "", 0.0)
     basicColIndexForRow = Seq()
 
   }
@@ -166,9 +160,11 @@ object MathModel {
   def constraintsString: String = {
     constraintIds.mkString("\n")
   }
+
   def varsString: String = {
     varIds.mkString("\n")
   }
+
   def varFactorsString: String = {
     varFactorInputs.map(_.toString).mkString("\n")
   }
@@ -191,9 +187,9 @@ object MathModel {
 
     //VarFactors for each constraint
     for (c <- constraints) {
-        varFactorRows :+= varFactorsForConstraint(c)
-        //EQ has corresponding GTE
-        if (c.inequality == "eq") varFactorRows :+= varFactorsForConstraint(c).map(vF => if (vF != 0) -vF else 0.0 )
+      varFactorRows :+= varFactorsForConstraint(c)
+      //EQ has corresponding GTE
+      if (c.inequality == "eq") varFactorRows :+= varFactorsForConstraint(c).map(vF => if (vF != 0) -vF else 0.0)
     }
 
     //Convert EQ constraints into LTE and GTE
@@ -224,22 +220,41 @@ object MathModel {
     basicColIndexForRow = Seq.tabulate(constraints.length)(col => constraints.length + col - 1)
 
     var minReducedCost = reducedCosts.min
-//    while (minReducedCost < 0){
-    val enteringCol = reducedCosts.indexOf(minReducedCost)
-    val varFactorCol = varFactorRows.map(row => row(enteringCol))
-    val enteringRow = varFactorCol.zipWithIndex.filter(
-      vF => vF._1 > 0).minBy(vF => rhsValues(vF._2)/vF._1)._2
+    //    while (minReducedCost < 0){
+    val enteringColNum = reducedCosts.indexOf(minReducedCost)
+    val varFactorCol = varFactorRows.map(row => row(enteringColNum))
+    //    val enteringRow = varFactorCol.zipWithIndex.filter(
+    //      vF => vF._1 > 0).minBy(vF => rhsValues(vF._2)/vF._1)._2
 
+    val enteringRowNum = varFactorCol.zipWithIndex.filter {
+      case (value, _) => value > 0
+    }.minBy { case (value, index) => rhsValues(index) / value }._2
 
-        //            case 0 => 0
-        //          }
-        //          rhsValues(varFactorRows.indexOf(row))/row(enteringVarCol)
-        //        }).filter(ratio => ratio >= 0.0).min
-        //    }
+    val enteringRow = varFactorRows(enteringRowNum)
+    val pivotValue = varFactorRows(enteringRowNum)(enteringColNum)
+//    var stepVarFactorRows = varFactorRows.filter(row => varFactorRows.indexOf(row) != enteringRowNum)
 
-        s"${varFactorRows.map(_.toString).mkString("\n")} \nreduced costs\n${reducedCosts.toString()} " +
-          s"\nconstraints\n${constraints.map(_.toString).mkString("\n")}\nenteringVarCol: $enteringCol" +
-          s"\nbasic cols: $basicColIndexForRow\nrhs: $rhsValues\nvarFactorCol: $varFactorCol\nentering row: $enteringRow"
+    val stepVarFactorRows = varFactorRows.zipWithIndex.map { case (rowValues, rowIndex) =>
+      if (rowIndex == enteringRowNum) rowValues
+      else {
+          rowValues(enteringColNum) match {
+            case 0 => rowValues
+            case _ => rowValues.zipWithIndex.map {
+              case (colValue, colIndex) => colValue - enteringRow(colIndex) / rowValues(enteringColNum)
+            }
+          }
+      }
     }
+    //            case 0 => 0
+    //          }
+    //          rhsValues(varFactorRows.indexOf(row))/row(enteringVarCol)
+    //        }).filter(ratio => ratio >= 0.0).min
+    //    }
+
+    s"${varFactorRows.map(_.toString).mkString("\n")} \nreduced costs\n${reducedCosts.toString()} " +
+      s"\nconstraints\n${constraints.map(_.toString).mkString("\n")}\nenteringVarCol: $enteringColNum" +
+      s"\nbasic cols: $basicColIndexForRow\nrhs: $rhsValues\nvarFactorCol: $varFactorCol" +
+      s"\nentering row: $enteringRowNum\nstep:\n${stepVarFactorRows.map(_.toString).mkString("\n")}"
+  }
 
 }
