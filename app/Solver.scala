@@ -106,6 +106,7 @@ object MathModel {
 
   var constraints: Seq[Constraint] = Seq()
   var objectiveFn: Constraint = Constraint("", "", "", "", 0.0)
+  var objectiveRhs: Double = 0.0
 
   var variables: Seq[Variable] = Seq()
   var reducedCosts: Seq[Double] = Seq()
@@ -121,6 +122,7 @@ object MathModel {
     reducedCosts = Seq()
     rhsValues = Seq()
     objectiveFn = Constraint("", "", "", "", 0.0)
+    objectiveRhs = 0.0
     basicColIndexForRow = Seq()
 
   }
@@ -219,32 +221,79 @@ object MathModel {
     //Record index of basic col
     basicColIndexForRow = Seq.tabulate(constraints.length)(col => constraints.length + col - 1)
 
-    var minReducedCost = reducedCosts.min
-    //    while (minReducedCost < 0){
-    val enteringColNum = reducedCosts.indexOf(minReducedCost)
-    val varFactorCol = varFactorRows.map(row => row(enteringColNum))
-    //    val enteringRow = varFactorCol.zipWithIndex.filter(
-    //      vF => vF._1 > 0).minBy(vF => rhsValues(vF._2)/vF._1)._2
+    var msg = "******************************************************"
 
-    val enteringRowNum = varFactorCol.zipWithIndex.filter {
-      case (value, _) => value > 0
-    }.minBy { case (value, index) => rhsValues(index) / value }._2
+//    enteringColNum = reducedCosts.zipWithIndex.filter{
+//      case(colValue,colIndex) => colValue < 0}.find{case(colValue,colIndex) => colValue == reducedCosts.min}.map{
+//      case (colValue,colIndex)=> colIndex}.getOrElse(-1)
 
-    val enteringRow = varFactorRows(enteringRowNum)
-    val pivotValue = varFactorRows(enteringRowNum)(enteringColNum)
-//    var stepVarFactorRows = varFactorRows.filter(row => varFactorRows.indexOf(row) != enteringRowNum)
+    var enteringColNum = {
+      val ltZeroSeq = reducedCosts.zipWithIndex.filter{case(colValue,colIndex) => colValue < 0}
+      if (ltZeroSeq.length > 0) ltZeroSeq.minBy{case(colValue,colIndex) => colValue}._2
+      else -1
+    }
 
-    val stepVarFactorRows = varFactorRows.zipWithIndex.map { case (rowValues, rowIndex) =>
-      if (rowIndex == enteringRowNum) rowValues
-      else {
-          rowValues(enteringColNum) match {
-            case 0 => rowValues
-            case _ => rowValues.zipWithIndex.map {
-              case (colValue, colIndex) => colValue - enteringRow(colIndex) / rowValues(enteringColNum)
+    //Add reduced costs and rhs to the varFactors
+    var fullMatrix = (varFactorRows :+ reducedCosts).zipWithIndex.map { case (rowValues, rowIndex) =>
+      rowValues :+ (rhsValues :+ objectiveRhs) (rowIndex)
+    }
+
+    //====Iterate====
+    var iterationCount = 0
+    while (enteringColNum >= 0 && iterationCount < 7) {
+
+      val varFactorCol = varFactorRows.map(row => row(enteringColNum))
+      //    val enteringRow = varFactorCol.zipWithIndex.filter(
+      //      vF => vF._1 > 0).minBy(vF => rhsValues(vF._2)/vF._1)._2
+
+      //Entering row is minimum ratio or rhs/factor where factor is > 0
+      val enteringRowNum = varFactorCol.zipWithIndex.filter {
+        case (value, _) => value > 0
+      }.minBy { case (value, index) => rhsValues(index) / value }._2
+
+      //    var stepVarFactorRows = varFactorRows.filter(row => varFactorRows.indexOf(row) != enteringRowNum)
+
+
+      val enteringRow = fullMatrix(enteringRowNum)
+      //val pivotValue = fullMatrix(enteringRowNum)(enteringColNum)
+
+      fullMatrix = fullMatrix.zipWithIndex.map { case (thisRow, rowIndex) =>
+        if (rowIndex == enteringRowNum) thisRow
+        else {
+          thisRow(enteringColNum) match {
+            case 0 => thisRow //thisRow is unchanged
+            case _ => thisRow.zipWithIndex.map {
+              case (colValue, colIndex) =>
+                colValue - enteringRow(colIndex)*(thisRow(enteringColNum)/enteringRow(enteringColNum))
             }
           }
+        }
       }
+
+      val thisMsg = s"\n\n>>>iteration: $iterationCount\nenteringVarCol: $enteringColNum" +
+        s"\nbasic cols: $basicColIndexForRow\nrhs: $rhsValues\nvarFactorCol: $varFactorCol" +
+        s"\nentering row: $enteringRowNum\nfull matrix:\n${fullMatrix.map(_.toString).mkString("\n")}"
+
+      println(thisMsg)
+
+      msg += thisMsg
+
+      //Var factors are full matrix without last row and last col
+      varFactorRows = fullMatrix.dropRight(1).map(row => row.dropRight(1))
+
+      //Reduced costs is last row, without rhs
+      reducedCosts = fullMatrix(fullMatrix.length - 1).dropRight(1)
+      println(s"\n*****$reducedCosts")
+
+      enteringColNum = {
+        val ltZeroSeq = reducedCosts.zipWithIndex.filter{case(colValue,colIndex) => colValue < 0}
+        if (ltZeroSeq.length > 0) ltZeroSeq.minBy{case(colValue,colIndex) => colValue}._2
+        else -1
+      }
+
+      iterationCount += 1
     }
+
     //            case 0 => 0
     //          }
     //          rhsValues(varFactorRows.indexOf(row))/row(enteringVarCol)
@@ -252,9 +301,7 @@ object MathModel {
     //    }
 
     s"${varFactorRows.map(_.toString).mkString("\n")} \nreduced costs\n${reducedCosts.toString()} " +
-      s"\nconstraints\n${constraints.map(_.toString).mkString("\n")}\nenteringVarCol: $enteringColNum" +
-      s"\nbasic cols: $basicColIndexForRow\nrhs: $rhsValues\nvarFactorCol: $varFactorCol" +
-      s"\nentering row: $enteringRowNum\nstep:\n${stepVarFactorRows.map(_.toString).mkString("\n")}"
+      s"\nconstraints\n${constraints.map(_.toString).mkString("\n")}\n$msg"
   }
 
 }
