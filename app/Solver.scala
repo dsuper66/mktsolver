@@ -111,7 +111,7 @@ object MathModel {
   var variables: Seq[Variable] = Seq()
   var reducedCosts: Seq[Double] = Seq()
   var rhsValues: Seq[Double] = Seq()
-  var basicColIndexForRow: Seq[Int] = Seq()
+  var basicColIndexForRow:  Seq[Int] = Seq()
 
   //Populate
   def resetMathModel(): Unit = {
@@ -218,8 +218,8 @@ object MathModel {
     //...reducedCosts row
     reducedCosts = reducedCosts ++ Seq.fill(constraints.length)(0.0)
 
-    //Record index of basic col
-    basicColIndexForRow = Seq.tabulate(constraints.length)(col => constraints.length + col - 1)
+    //Record index of basic cols
+    basicColIndexForRow = Seq.tabulate(constraints.length)(col => variables.length + col)
 
     var msg = "******************************************************"
 
@@ -242,17 +242,19 @@ object MathModel {
     var iterationCount = 0
     while (enteringColNum >= 0 && iterationCount < 7) {
 
-      val varFactorCol = varFactorRows.map(row => row(enteringColNum))
+      val varFactorEnteringCol = varFactorRows.map(row => row(enteringColNum))
       //    val enteringRow = varFactorCol.zipWithIndex.filter(
       //      vF => vF._1 > 0).minBy(vF => rhsValues(vF._2)/vF._1)._2
 
       //Entering row is minimum ratio or rhs/factor where factor is > 0
-      val enteringRowNum = varFactorCol.zipWithIndex.filter {
-        case (value, _) => value > 0
-      }.minBy { case (value, index) => rhsValues(index) / value }._2
+      val enteringRowNum = varFactorEnteringCol.zipWithIndex.filter {
+        case (rowValue,_) => rowValue > 0
+      }.minBy { case (rowValue, index) => rhsValues(index) / rowValue }._2
 
       //    var stepVarFactorRows = varFactorRows.filter(row => varFactorRows.indexOf(row) != enteringRowNum)
 
+      //Record the basic var
+      basicColIndexForRow = basicColIndexForRow.updated(enteringRowNum,enteringColNum)
 
       val enteringRow = fullMatrix(enteringRowNum)
       //val pivotValue = fullMatrix(enteringRowNum)(enteringColNum)
@@ -270,20 +272,32 @@ object MathModel {
         }
       }
 
-      val thisMsg = s"\n\n>>>iteration: $iterationCount\nenteringVarCol: $enteringColNum" +
-        s"\nbasic cols: $basicColIndexForRow\nrhs: $rhsValues\nvarFactorCol: $varFactorCol" +
-        s"\nentering row: $enteringRowNum\nfull matrix:\n${fullMatrix.map(_.toString).mkString("\n")}"
-
-      println(thisMsg)
-
-      msg += thisMsg
-
       //Var factors are full matrix without last row and last col
       varFactorRows = fullMatrix.dropRight(1).map(row => row.dropRight(1))
 
       //Reduced costs is last row, without rhs
       reducedCosts = fullMatrix(fullMatrix.length - 1).dropRight(1)
+
+      //Reporting
+      rhsValues = fullMatrix.dropRight(1).map(row => row(row.length - 1))
+
       println(s"\n*****$reducedCosts")
+      val thisMsg = s"\n\n>>>iteration: $iterationCount\nenteringVarCol: $enteringColNum" +
+        s"\nbasic cols: $basicColIndexForRow\nrhs: $rhsValues\nvarFactorCol: $varFactorEnteringCol" +
+        s"\nentering row: $enteringRowNum\nfull matrix:\n${fullMatrix.map(_.toString).mkString("\n")}"
+      println(thisMsg)
+      msg += thisMsg
+
+
+      var resultString = "\n####\n"
+      for ((basicCol,rowIndex) <- basicColIndexForRow.zipWithIndex.filter(_._1 < variables.length)) {
+        resultString += s"\nbc:$basicCol ri:$rowIndex ${variables(basicCol).varId} = ${rhsValues(rowIndex)}"
+      }
+      resultString += "\n####"
+      println(resultString)
+      msg += resultString
+
+
 
       enteringColNum = {
         val ltZeroSeq = reducedCosts.zipWithIndex.filter{case(colValue,colIndex) => colValue < 0}
