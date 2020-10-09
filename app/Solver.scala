@@ -221,7 +221,7 @@ object MathModel {
     //Record index of basic cols
     basicColIndexForRow = Seq.tabulate(constraints.length)(col => variables.length + col)
 
-    var msg = "******************************************************"
+    var msg = "\n\n*****SCALA SOLVE*************************************************"
 
 //    enteringColNum = reducedCosts.zipWithIndex.filter{
 //      case(colValue,colIndex) => colValue < 0}.find{case(colValue,colIndex) => colValue == reducedCosts.min}.map{
@@ -240,7 +240,7 @@ object MathModel {
 
     //====Iterate====
     var iterationCount = 0
-    while (enteringColNum >= 0 && iterationCount < 7) {
+    while (enteringColNum >= 0 && iterationCount < 12) {
 
       val varFactorEnteringCol = varFactorRows.map(row => row(enteringColNum))
       //    val enteringRow = varFactorCol.zipWithIndex.filter(

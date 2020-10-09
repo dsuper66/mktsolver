@@ -159,9 +159,7 @@ class TodoController @Inject()(
                   ))
 
                   //Var Id for component
-                  //val varId = s"${childElement.elementId}.${constraintComp.varType}"
                   val varId = addVar(childElement.elementId, constraintComp.varType)
-                  //                  addVarIfNew(varId)
                   setVarFactor(varId, constraintId, varFactor)
 
                   msgForThisConstraint += s" $varFactor * $varId \n"
@@ -176,8 +174,9 @@ class TodoController @Inject()(
           }
 
           Ok(
-            s"SCALA data:\n $modelElements\n====\n $constraintDefs \n====\n$constraintComps\n====\n  " +
-              s"$msg\n\n$constraintsString\n\n$varsString\n\n$varFactorsString\n\n$solveModel"
+            s"SCALA data:\n $modelElements\n====\n constraintDefs:\n$constraintDefs \n====\n" +
+              s"constraintComps:\n$constraintComps\n====\n  $msg\n\nconstraintsString:\n$constraintsString" +
+              s"\n\nvarString:\n$varsString\n\n$varFactorsString\n\n$solveModel"
           )
         }
         .getOrElse {
