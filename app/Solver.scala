@@ -95,7 +95,7 @@ object MathModel {
                      )
 
   //Data
-  var constraintIds: Seq[String] = Seq()
+//  var constraintIds: Seq[String] = Seq()
   var varIds: Seq[String] = Seq()
 
   var varFactorRows: Seq[Seq[Double]] = Seq()
@@ -155,9 +155,9 @@ object MathModel {
   }
 
   //Report
-  def constraintsString: String = {
-    constraintIds.mkString("\n")
-  }
+//  def constraintsString: String = {
+//    constraintIds.mkString("\n")
+//  }
 
   def varsString: String = {
     varIds.mkString("\n")
@@ -234,20 +234,21 @@ object MathModel {
     var iterationCount = 0
     while (enteringColNum >= 0 && iterationCount < 12) {
 
-      val varFactorEnteringCol = varFactorRows.map(row => row(enteringColNum))
-
-      //Entering row is minimum ratio or rhs/factor where factor is > 0
+      //Find entering row for entering col (remove the objective row from the check)
+      //Var factors are full matrix without last row and last col
+//      varFactorRows = fullMatrix.dropRight(1).map(row => row.dropRight(1))
+      val varFactorEnteringCol = fullMatrix.dropRight(1).map(row => row(enteringColNum))
+      //Entering row is minimum ratio of rhs/factor where factor is > 0
       val enteringRowNum = varFactorEnteringCol.zipWithIndex.filter {
         case (rowValue,_) => rowValue > 0
       }.minBy { case (rowValue, index) => rhsValues(index) / rowValue }._2
-
-      //Record the new basic var
+      //Record the entering basic var
       basicColIndexForRow = basicColIndexForRow.updated(enteringRowNum,enteringColNum)
 
       val enteringRow = fullMatrix(enteringRowNum)
       //val pivotValue = fullMatrix(enteringRowNum)(enteringColNum)
 
-      //Adjust the full matrix (including rhs and objective)
+      //Adjust the full matrix to set all other rows to zero in entering col (also adjusts rhs and objective)
       fullMatrix = fullMatrix.zipWithIndex.map { case (thisRow, rowIndex) =>
         if (rowIndex == enteringRowNum) thisRow
         else {
@@ -261,14 +262,12 @@ object MathModel {
         }
       }
 
-      //Var factors are full matrix without last row and last col
-      varFactorRows = fullMatrix.dropRight(1).map(row => row.dropRight(1))
-
-      //Reduced costs is last row, without rhs
-      reducedCosts = fullMatrix(fullMatrix.length - 1).dropRight(1)
+      //Reduced costs are last row, without rhs... use this to find the next entering var
+      reducedCosts = fullMatrix.last.dropRight(1)
 
       //Reporting
-      rhsValues = fullMatrix.dropRight(1).map(row => row(row.length - 1))
+      rhsValues = fullMatrix.dropRight(1).map(row => row.last)
+      val slackVarReducedCosts = reducedCosts.filter(row => reducedCosts.indexOf(row) >= variables.length)
 
       println(s"\n*****$reducedCosts")
       val thisMsg = s"\n\n>>>iteration: $iterationCount\nenteringVarCol: $enteringColNum" +
@@ -277,15 +276,21 @@ object MathModel {
       println(thisMsg)
       msg += thisMsg
 
-      var resultString = "\n####\n"
+      var resultString = "\n\n####BASIC VARS####\n"
       for ((basicCol,rowIndex) <- basicColIndexForRow.zipWithIndex.filter(_._1 < variables.length)) {
-        resultString += s"\nbc:$basicCol ri:$rowIndex ${variables(basicCol).varId} = ${rhsValues(rowIndex)}"
+        resultString += s"col:$basicCol row:$rowIndex ${variables(basicCol).varId} = ${rhsValues(rowIndex)}\n"
       }
-      resultString += "\n####"
+      resultString += s"####\n\n####SHADOW PRICES####\n$slackVarReducedCosts\n"
+//      for ((constraint,rowIndex) <- constraints.zipWithIndex) {
+//        resultString += s"${constraint.constraintId} $$${slackVarReducedCosts(rowIndex)}\n"
+//      }
+
+      resultString += "####\n"
+
       println(resultString)
       msg += resultString
 
-
+      //Check for negative reduced costs and find entering column
       enteringColNum = {
         val ltZeroSeq = reducedCosts.zipWithIndex.filter{case(colValue,colIndex) => colValue < 0}
         if (ltZeroSeq.length > 0) ltZeroSeq.minBy{case(colValue,colIndex) => colValue}._2
@@ -295,7 +300,8 @@ object MathModel {
       iterationCount += 1
     }
 
-    s"${varFactorRows.map(_.toString).mkString("\n")} \nreduced costs\n${reducedCosts.toString()} " +
+    //Return the results
+    s"${fullMatrix.map(_.toString).mkString("\n")} \nreduced costs\n${reducedCosts.toString()} " +
       s"\nconstraints\n${constraints.map(_.toString).mkString("\n")}\n$msg"
   }
 

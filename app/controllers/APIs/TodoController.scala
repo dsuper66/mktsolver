@@ -175,8 +175,8 @@ class TodoController @Inject()(
 
           Ok(
             s"SCALA data:\n $modelElements\n====\n constraintDefs:\n$constraintDefs \n====\n" +
-              s"constraintComps:\n$constraintComps\n====\n  $msg\n\nconstraintsString:\n$constraintsString" +
-              s"\n\nvarString:\n$varsString\n\n$varFactorsString\n\n$solveModel"
+              s"constraintComps:\n$constraintComps\n====\n  $msg\n" +
+              s"varString:\n$varsString\n\n$varFactorsString\n\n$solveModel"
           )
         }
         .getOrElse {
