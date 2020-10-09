@@ -36,7 +36,6 @@ object MathModel {
                            )
 
   // case class Property(name: String, value: Any)
-
   object ModelElement {
     //Reads looks for this implicit which tells it how to read [String,Any]
     implicit val readsMap =
@@ -124,7 +123,6 @@ object MathModel {
     objectiveFn = Constraint("", "", "", "", 0.0)
     objectiveRhs = 0.0
     basicColIndexForRow = Seq()
-
   }
 
   def addConstraint(constraintType: String, elementId: String, inequality: String, rhsValue: Double): String = {
@@ -154,8 +152,6 @@ object MathModel {
                   ): Unit = {
     val varFactor = VarFactor(varId, constraintId, value)
     if (!varFactorInputs.contains(varFactor)) varFactorInputs = varFactorInputs :+ varFactor
-    //    varFactors = varFactors.filter(v => !(v.varId == varId && v.constraintId == constraintId))
-    //    varFactors = varFactors :+ VarFactor(varId,constraintId,value)
   }
 
   //Report
@@ -223,10 +219,6 @@ object MathModel {
 
     var msg = "\n\n*****SCALA SOLVE*************************************************"
 
-//    enteringColNum = reducedCosts.zipWithIndex.filter{
-//      case(colValue,colIndex) => colValue < 0}.find{case(colValue,colIndex) => colValue == reducedCosts.min}.map{
-//      case (colValue,colIndex)=> colIndex}.getOrElse(-1)
-
     var enteringColNum = {
       val ltZeroSeq = reducedCosts.zipWithIndex.filter{case(colValue,colIndex) => colValue < 0}
       if (ltZeroSeq.length > 0) ltZeroSeq.minBy{case(colValue,colIndex) => colValue}._2
@@ -243,22 +235,19 @@ object MathModel {
     while (enteringColNum >= 0 && iterationCount < 12) {
 
       val varFactorEnteringCol = varFactorRows.map(row => row(enteringColNum))
-      //    val enteringRow = varFactorCol.zipWithIndex.filter(
-      //      vF => vF._1 > 0).minBy(vF => rhsValues(vF._2)/vF._1)._2
 
       //Entering row is minimum ratio or rhs/factor where factor is > 0
       val enteringRowNum = varFactorEnteringCol.zipWithIndex.filter {
         case (rowValue,_) => rowValue > 0
       }.minBy { case (rowValue, index) => rhsValues(index) / rowValue }._2
 
-      //    var stepVarFactorRows = varFactorRows.filter(row => varFactorRows.indexOf(row) != enteringRowNum)
-
-      //Record the basic var
+      //Record the new basic var
       basicColIndexForRow = basicColIndexForRow.updated(enteringRowNum,enteringColNum)
 
       val enteringRow = fullMatrix(enteringRowNum)
       //val pivotValue = fullMatrix(enteringRowNum)(enteringColNum)
 
+      //Adjust the full matrix (including rhs and objective)
       fullMatrix = fullMatrix.zipWithIndex.map { case (thisRow, rowIndex) =>
         if (rowIndex == enteringRowNum) thisRow
         else {
@@ -288,7 +277,6 @@ object MathModel {
       println(thisMsg)
       msg += thisMsg
 
-
       var resultString = "\n####\n"
       for ((basicCol,rowIndex) <- basicColIndexForRow.zipWithIndex.filter(_._1 < variables.length)) {
         resultString += s"\nbc:$basicCol ri:$rowIndex ${variables(basicCol).varId} = ${rhsValues(rowIndex)}"
@@ -296,7 +284,6 @@ object MathModel {
       resultString += "\n####"
       println(resultString)
       msg += resultString
-
 
 
       enteringColNum = {
@@ -307,12 +294,6 @@ object MathModel {
 
       iterationCount += 1
     }
-
-    //            case 0 => 0
-    //          }
-    //          rhsValues(varFactorRows.indexOf(row))/row(enteringVarCol)
-    //        }).filter(ratio => ratio >= 0.0).min
-    //    }
 
     s"${varFactorRows.map(_.toString).mkString("\n")} \nreduced costs\n${reducedCosts.toString()} " +
       s"\nconstraints\n${constraints.map(_.toString).mkString("\n")}\n$msg"
