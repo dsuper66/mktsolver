@@ -267,7 +267,8 @@ object MathModel {
 
       //Reporting
       rhsValues = fullMatrix.dropRight(1).map(row => row.last)
-      val slackVarReducedCosts = reducedCosts.filter(row => reducedCosts.indexOf(row) >= variables.length)
+      //Slack vars costs are reduced cost cols added after input vars
+      val slackVarReducedCosts = reducedCosts.zipWithIndex.filter(_._2 >= variables.length).map(_._1)
 
       println(s"\n*****$reducedCosts")
       val thisMsg = s"\n\n>>>iteration: $iterationCount\nenteringVarCol: $enteringColNum" +
@@ -280,10 +281,10 @@ object MathModel {
       for ((basicCol,rowIndex) <- basicColIndexForRow.zipWithIndex.filter(_._1 < variables.length)) {
         resultString += s"col:$basicCol row:$rowIndex ${variables(basicCol).varId} = ${rhsValues(rowIndex)}\n"
       }
-      resultString += s"####\n\n####SHADOW PRICES####\n$slackVarReducedCosts\n"
-//      for ((constraint,rowIndex) <- constraints.zipWithIndex) {
-//        resultString += s"${constraint.constraintId} $$${slackVarReducedCosts(rowIndex)}\n"
-//      }
+      resultString += s"####\n\n####SHADOW PRICES####\n"
+      for ((constraint,rowIndex) <- constraints.zipWithIndex) {
+        resultString += s"${constraint.constraintId} $$${slackVarReducedCosts(rowIndex)}\n"
+      }
 
       resultString += "####\n"
 
