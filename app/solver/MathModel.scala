@@ -73,6 +73,8 @@ object MathModel {
   }
 
   //Solver Definitions... created by combining Elements with Constraint Defs
+  //=====================
+
   case class VarFactor(
                         varId: String,
                         constraintId: String,
@@ -84,18 +86,18 @@ object MathModel {
                          constraintType: String,
                          elementId: String,
                          inequality: String,
-                         rhsValue: Double
+                         rhsValue: Double,
+                         shadowPrice: Double = 0.0 //result
                        )
 
   case class Variable(
                        varId: String,
                        varType: String,
-                       elementId: String
+                       elementId: String,
+                       quantity: Double = 0.0 //result
                      )
 
   //Data
-//  var varIds: Seq[String] = Seq()
-
   var varFactorRows: Seq[Seq[Double]] = Seq()
   //Var factor inputs are used to create varFactor rows
   //which are then related to c and v by row and col
@@ -153,14 +155,6 @@ object MathModel {
   }
 
   //Report
-//  def constraintsString: String = {
-//    constraintIds.mkString("\n")
-//  }
-
-//  def varsString: String = {
-//    varIds.mkString("\n")
-//  }
-
   def varFactorsString: String = {
     varFactorInputs.map(_.toString).mkString("\n")
   }
@@ -184,17 +178,20 @@ object MathModel {
     //VarFactors for each constraint
     for (c <- constraints) {
       varFactorRows :+= varFactorsForConstraint(c)
-      //EQ has corresponding GTE
-      if (c.inequality == "eq") varFactorRows :+= varFactorsForConstraint(c).map(vF => if (vF != 0) -vF else 0.0)
+      //EQ has corresponding GTE constraint
+      if (c.inequality == "eq") varFactorRows :+=
+        varFactorsForConstraint(c).map(vF => if (vF != 0) -vF else 0.0)
     }
 
     //Convert EQ constraints into LTE and GTE
+    //Only these EQ sourced constraints get the LTE,GTE suffix so we can identify that they are for EQ
     var constraintsWithEq: Seq[Constraint] = Seq()
     for (c <- constraints) {
       constraintsWithEq = constraintsWithEq ++ {
         c.inequality
         match {
-          case "eq" => Seq(Constraint(s"${c.constraintId}.LTE", c.constraintType, c.elementId, c.inequality, c.rhsValue),
+          case "eq" => Seq(
+            Constraint(s"${c.constraintId}.LTE", c.constraintType, c.elementId, c.inequality, c.rhsValue),
             Constraint(s"${c.constraintId}.GTE", c.constraintType, c.elementId, c.inequality, c.rhsValue))
           case _ => Seq(c)
         }
@@ -234,7 +231,6 @@ object MathModel {
 
       //Find entering row for entering col (remove the objective row from the check)
       //Var factors are full matrix without last row and last col
-//      varFactorRows = fullMatrix.dropRight(1).map(row => row.dropRight(1))
       val varFactorEnteringCol = fullMatrix.dropRight(1).map(row => row(enteringColNum))
       //Entering row is minimum ratio of rhs/factor where factor is > 0
       val enteringRowNum = varFactorEnteringCol.zipWithIndex.filter {
@@ -248,10 +244,12 @@ object MathModel {
 
       //Adjust the full matrix to set all other rows to zero in entering col (also adjusts rhs and objective)
       fullMatrix = fullMatrix.zipWithIndex.map { case (thisRow, rowIndex) =>
-        if (rowIndex == enteringRowNum) thisRow
+        if (rowIndex == enteringRowNum) {
+          thisRow.map(row => row/enteringRow(enteringColNum))
+        }
         else {
           thisRow(enteringColNum) match {
-            case 0 => thisRow //thisRow is unchanged
+            case 0 => thisRow //if value in entering col is zero then thisRow is unchanged
             case _ => thisRow.zipWithIndex.map {
               case (colValue, colIndex) =>
                 colValue - enteringRow(colIndex)*(thisRow(enteringColNum)/enteringRow(enteringColNum))
@@ -262,34 +260,41 @@ object MathModel {
 
       //Reduced costs are last row, without rhs... use this to find the next entering var
       reducedCosts = fullMatrix.last.dropRight(1)
-
-      //Reporting
+      //RHS values
       rhsValues = fullMatrix.dropRight(1).map(row => row.last)
       //Slack vars costs are reduced cost cols added after input vars
-      val slackVarReducedCosts = reducedCosts.zipWithIndex.filter(_._2 >= variables.length).map(_._1)
+      val slackCosts = reducedCosts.zipWithIndex.filter(_._2 >= variables.length).map(_._1)
 
-      println(s"\n*****$reducedCosts")
+      //Extract prices and quantities
+      //prices
+      constraints = constraints.zipWithIndex.map{case(c,i) => c.copy(shadowPrice = slackCosts(i))}
+      var pricesAndQuantitiesString = s"####\n\n####SHADOW PRICES####\n"
+      for ((c,rowIndex) <- constraints.zipWithIndex) {
+        //If constraint is GTE then shadow price is negative
+        var shadowPrice = c.shadowPrice //slackCosts(rowIndex)
+        if (shadowPrice > 0 && c.constraintType == "nodeBal" && c.constraintId.contains("LTE")) {
+          shadowPrice *= -1.0
+        }
+        pricesAndQuantitiesString += s"${c.constraintId} $$$shadowPrice\n"
+      }
+      //quantities
+      pricesAndQuantitiesString += "\n\n####BASIC VARS####\n"
+      for ((basicCol,rowIndex) <- basicColIndexForRow.zipWithIndex.filter(_._1 < variables.length)) {
+        pricesAndQuantitiesString += s"col:$basicCol row:$rowIndex ${variables(basicCol).varId} = ${rhsValues(rowIndex)}\n"
+      }
+      pricesAndQuantitiesString += "####\n"
+
+      //Progress logging
       val thisMsg = s"\n\n>>>iteration: $iterationCount\nenteringVarCol: $enteringColNum" +
         s"\nbasic cols: $basicColIndexForRow\nrhs: $rhsValues\nvarFactorCol: $varFactorEnteringCol" +
-        s"\nentering row: $enteringRowNum\nfull matrix:\n${fullMatrix.map(_.toString).mkString("\n")}"
+        s"\nentering row: $enteringRowNum\nfull matrix after:\n${fullMatrix.map(_.toString).mkString("\n")}"
       println(thisMsg)
       msg += thisMsg
+      //Price and quantity logging
+      println(pricesAndQuantitiesString)
+      msg += pricesAndQuantitiesString
 
-      var resultString = "\n\n####BASIC VARS####\n"
-      for ((basicCol,rowIndex) <- basicColIndexForRow.zipWithIndex.filter(_._1 < variables.length)) {
-        resultString += s"col:$basicCol row:$rowIndex ${variables(basicCol).varId} = ${rhsValues(rowIndex)}\n"
-      }
-      resultString += s"####\n\n####SHADOW PRICES####\n"
-      for ((constraint,rowIndex) <- constraints.zipWithIndex) {
-        resultString += s"${constraint.constraintId} $$${slackVarReducedCosts(rowIndex)}\n"
-      }
-
-      resultString += "####\n"
-
-      println(resultString)
-      msg += resultString
-
-      //Check for negative reduced costs and find entering column
+      //Check for negative reduced costs to find entering column, if any
       enteringColNum = {
         val ltZeroSeq = reducedCosts.zipWithIndex.filter{case(colValue, _) => colValue < 0}
         if (ltZeroSeq.nonEmpty) ltZeroSeq.minBy{case(colValue, _) => colValue}._2

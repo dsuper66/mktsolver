@@ -91,7 +91,7 @@ class TodoController @Inject()(
                 s"has constraint: ${constraintDef.constraintType}\nwith components:\n"
 
               //===Components of the Constraint===
-              //Does the parent element have a var in the constraint components
+              //Check if parent element has var in the constraint components
               if (constraintDef.varType != "") {
                 //Add the variable
                 val variableId = createVariable(parentElement.elementId, constraintDef.varType)
@@ -135,8 +135,8 @@ class TodoController @Inject()(
                   //VarFactor for component
                   var varFactor = constraintComp.factorValue
 
-                  //The varFactor is also from the factorProperty of the parent or child
-                  //or the factorParentProperty of the child
+                  //and potentially from the factorProperty of the parent or child to themselves
+                  //or the parent property from the factorParentProperty of the child
                   varFactor = (varFactor
                     * getPropertyAsDoubleElseDefault(
                     childElement,
@@ -151,11 +151,12 @@ class TodoController @Inject()(
                     constraintDef.factorProperty, 1.0
                   ))
 
-                  //Var Id for component
-                  val varId = createVariable(childElement.elementId, constraintComp.varType)
-                  setVarFactor(varId, constraintId, varFactor)
+                  //VariableId for constraint component
+                  val variableId = createVariable(childElement.elementId, constraintComp.varType)
+                  //The varFactor relates the variable to the particular constraint
+                  setVarFactor(variableId, constraintId, varFactor)
 
-                  msgForThisConstraint += s" $varFactor * $varId \n"
+                  msgForThisConstraint += s" $varFactor * $variableId \n"
                 }
               } //done components
 
