@@ -5,7 +5,7 @@ import play.api.libs.json._
 //MathModel Module
 object MathModel {
 
-  case class Element(elementId: String, bus: String)
+//  case class Element(elementId: String, bus: String)
 
   case class ModelElement(
                            elementId: String,
@@ -22,7 +22,7 @@ object MathModel {
                             inEquality: String,
                             rhsProperty: String,
                             rhsValue: Double,
-                            multProperty: String
+                            factorProperty: String
                           )
 
   case class ConstraintComp(
@@ -30,12 +30,11 @@ object MathModel {
                              elementType: String,
                              propertyMap: String,
                              varType: String,
-                             multParentProperty: String,
-                             multValue: Double,
-                             multProperty: String
+                             factorParentProperty: String,
+                             factorValue: Double,
+                             factorProperty: String
                            )
 
-  // case class Property(name: String, value: Any)
   object ModelElement {
     //Reads looks for this implicit which tells it how to read [String,Any]
     implicit val readsMap =
@@ -73,7 +72,7 @@ object MathModel {
     implicit val reads: Reads[ConstraintComp] = Json.reads[ConstraintComp]
   }
 
-  //Solver Definitions
+  //Solver Definitions... created by combining Elements with Constraint Defs
   case class VarFactor(
                         varId: String,
                         constraintId: String,
@@ -95,8 +94,7 @@ object MathModel {
                      )
 
   //Data
-//  var constraintIds: Seq[String] = Seq()
-  var varIds: Seq[String] = Seq()
+//  var varIds: Seq[String] = Seq()
 
   var varFactorRows: Seq[Seq[Double]] = Seq()
   //Var factor inputs are used to create varFactor rows
@@ -137,7 +135,7 @@ object MathModel {
     constraintId
   }
 
-  def addVar(elementId: String, varType: String): String = {
+  def createVariable(elementId: String, varType: String): String = {
     val varId = s"$elementId.$varType"
     if (!variables.exists(v => v.varId == varId)) {
       variables = variables :+ Variable(varId, varType, elementId)
@@ -159,9 +157,9 @@ object MathModel {
 //    constraintIds.mkString("\n")
 //  }
 
-  def varsString: String = {
-    varIds.mkString("\n")
-  }
+//  def varsString: String = {
+//    varIds.mkString("\n")
+//  }
 
   def varFactorsString: String = {
     varFactorInputs.map(_.toString).mkString("\n")
@@ -220,8 +218,8 @@ object MathModel {
     var msg = "\n\n*****SCALA SOLVE*************************************************"
 
     var enteringColNum = {
-      val ltZeroSeq = reducedCosts.zipWithIndex.filter{case(colValue,colIndex) => colValue < 0}
-      if (ltZeroSeq.length > 0) ltZeroSeq.minBy{case(colValue,colIndex) => colValue}._2
+      val ltZeroSeq = reducedCosts.zipWithIndex.filter{case(colValue, _) => colValue < 0}
+      if (ltZeroSeq.nonEmpty) ltZeroSeq.minBy{case(colValue, _) => colValue}._2
       else -1
     }
 
@@ -293,8 +291,8 @@ object MathModel {
 
       //Check for negative reduced costs and find entering column
       enteringColNum = {
-        val ltZeroSeq = reducedCosts.zipWithIndex.filter{case(colValue,colIndex) => colValue < 0}
-        if (ltZeroSeq.length > 0) ltZeroSeq.minBy{case(colValue,colIndex) => colValue}._2
+        val ltZeroSeq = reducedCosts.zipWithIndex.filter{case(colValue, _) => colValue < 0}
+        if (ltZeroSeq.nonEmpty) ltZeroSeq.minBy{case(colValue, _) => colValue}._2
         else -1
       }
 
