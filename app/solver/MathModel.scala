@@ -97,6 +97,14 @@ object MathModel {
                        result: Double = 0.0 //result
                      )
 
+  object Constraint {
+    //need Json deserializer for type
+    implicit val reads = Json.writes[Constraint]
+  }
+  object Variable {
+    implicit val reads = Json.writes[Variable]
+  }
+
   //Data
   var varFactorRows: Seq[Seq[Double]] = Seq()
   //Var factor inputs are used to create varFactor rows
@@ -170,7 +178,7 @@ object MathModel {
   }
 
   //Solve
-  def solveModel: String = {
+  def solveModel: JsValue = {
     //Reduced costs for the objective
     reducedCosts = varFactorsForConstraint(objectiveFn)
 
@@ -323,7 +331,12 @@ object MathModel {
     //Return the results
 //    s"${fullMatrix.map(_.toString).mkString("\n")} \nreduced costs\n${reducedCosts.toString()} " +
 //      s"\nconstraints\n${constraints.map(_.toString).mkString("\n")}\n$msg"
-    s"\n$msg"
+//    s"\n$msg"
+
+//    s"${Json.prettyPrint(Json.toJson(objectiveRhs))}\n${Json.prettyPrint(Json.toJson(constraints))}\n" +
+//      s"${Json.prettyPrint(Json.toJson(variables))}\n$msg"
+
+    Json.toJson(variables)
   }
 
 }

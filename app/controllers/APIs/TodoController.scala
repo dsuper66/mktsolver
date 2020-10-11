@@ -167,11 +167,12 @@ class TodoController @Inject()(
             }
           }
 
-          Ok(
-            s"SCALA data:\n $modelElements\n====\n constraintDefs:\n$constraintDefs \n====\n" +
-              s"constraintComps:\n$constraintComps\n====\n  $msg\n" +
-              s"varFactors:\n$varFactorsString\n\n$solveModel"
-          )
+          Ok(solveModel)
+//          Ok(
+//            s"SCALA data:\n $modelElements\n====\n constraintDefs:\n$constraintDefs \n====\n" +
+//              s"constraintComps:\n$constraintComps\n====\n  $msg\n" +
+//              s"varFactors:\n$varFactorsString\n\n$solveModel"
+//          )
         }
         .getOrElse {
           BadRequest("Expecting application/json request body")
