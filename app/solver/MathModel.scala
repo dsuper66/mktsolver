@@ -97,12 +97,20 @@ object MathModel {
                        result: Double = 0.0 //result
                      )
 
+  case class Results(
+                    variables: Seq[Variable],
+                    constraints: Seq[Constraint]
+                    )
+
   object Constraint {
     //need Json deserializer for type
     implicit val reads = Json.writes[Constraint]
   }
   object Variable {
     implicit val reads = Json.writes[Variable]
+  }
+  object Results {
+    implicit val reads = Json.writes[Results]
   }
 
   //Data
@@ -336,6 +344,7 @@ object MathModel {
 //    s"${Json.prettyPrint(Json.toJson(objectiveRhs))}\n${Json.prettyPrint(Json.toJson(constraints))}\n" +
 //      s"${Json.prettyPrint(Json.toJson(variables))}\n$msg"
 
+//    Json.toJson(Results(variables,constraints))
     Json.toJson(variables)
   }
 
