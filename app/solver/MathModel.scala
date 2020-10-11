@@ -259,10 +259,12 @@ object MathModel {
 
       //Reduced costs are last row, without rhs... use this to find the next entering var
       reducedCosts = fullMatrix.last.dropRight(1)
-      //RHS values
+      //RHS values (remove reduced costs row then get the last col of what remains)
       rhsValues = fullMatrix.dropRight(1).map(row => row.last)
       //Slack vars costs are reduced cost cols added after input vars
       val slackCosts = reducedCosts.zipWithIndex.filter(_._2 >= variables.length).map(_._1)
+      //Objective
+      objectiveRhs = fullMatrix.last.last
 
       //Extract prices and quantities
       //prices
@@ -299,7 +301,7 @@ object MathModel {
       pricesAndQuantitiesString += "####\n"
 
       //Progress logging
-      val thisMsg = s"\n\n>>>iteration: $iterationCount\nenteringVarCol: $enteringColNum" +
+      val thisMsg = s"\n\n>>>iteration:$iterationCount\nobj:$objectiveRhs\nenteringVarCol:$enteringColNum" +
         s"\nbasic cols: $basicColEachRow\nrhs: $rhsValues\nvarFactorCol: $varFactorEnteringCol" +
         s"\nentering row: $enteringRowNum\nfull matrix after:\n${fullMatrix.map(_.toString).mkString("\n")}"
       println(thisMsg)
@@ -319,8 +321,9 @@ object MathModel {
     }
 
     //Return the results
-    s"${fullMatrix.map(_.toString).mkString("\n")} \nreduced costs\n${reducedCosts.toString()} " +
-      s"\nconstraints\n${constraints.map(_.toString).mkString("\n")}\n$msg"
+//    s"${fullMatrix.map(_.toString).mkString("\n")} \nreduced costs\n${reducedCosts.toString()} " +
+//      s"\nconstraints\n${constraints.map(_.toString).mkString("\n")}\n$msg"
+    s"\n$msg"
   }
 
 }
