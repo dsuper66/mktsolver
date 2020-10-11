@@ -94,7 +94,7 @@ object MathModel {
                        varId: String,
                        varType: String,
                        elementId: String,
-                       quantity: Double = 0.0 //result
+                       result: Double = 0.0 //result
                      )
 
   //Data
@@ -110,7 +110,7 @@ object MathModel {
   var variables: Seq[Variable] = Seq()
   var reducedCosts: Seq[Double] = Seq()
   var rhsValues: Seq[Double] = Seq()
-  var basicColIndexForRow:  Seq[Int] = Seq()
+  var basicColEachRow:  Seq[Int] = Seq()
 
   //Populate
   def resetMathModel(): Unit = {
@@ -122,7 +122,6 @@ object MathModel {
     rhsValues = Seq()
     objectiveFn = Constraint("", "", "", "", 0.0)
     objectiveRhs = 0.0
-    basicColIndexForRow = Seq()
   }
 
   def addConstraint(constraintType: String, elementId: String, inequality: String, rhsValue: Double): String = {
@@ -210,7 +209,7 @@ object MathModel {
     reducedCosts = reducedCosts ++ Seq.fill(constraints.length)(0.0)
 
     //Record index of basic cols
-    basicColIndexForRow = Seq.tabulate(constraints.length)(col => variables.length + col)
+    basicColEachRow = Seq.tabulate(constraints.length)(col => variables.length + col)
 
     var msg = "\n\n*****SCALA SOLVE*************************************************"
 
@@ -237,7 +236,7 @@ object MathModel {
         case (rowValue,_) => rowValue > 0
       }.minBy { case (rowValue, index) => rhsValues(index) / rowValue }._2
       //Record the entering basic var
-      basicColIndexForRow = basicColIndexForRow.updated(enteringRowNum,enteringColNum)
+      basicColEachRow = basicColEachRow.updated(enteringRowNum,enteringColNum)
 
       val enteringRow = fullMatrix(enteringRowNum)
       //val pivotValue = fullMatrix(enteringRowNum)(enteringColNum)
@@ -268,6 +267,7 @@ object MathModel {
       //Extract prices and quantities
       //prices
       constraints = constraints.zipWithIndex.map{case(c,i) => c.copy(shadowPrice = slackCosts(i))}
+      //For text summary
       var pricesAndQuantitiesString = s"####\n\n####SHADOW PRICES####\n"
       for ((c,rowIndex) <- constraints.zipWithIndex) {
         //If constraint is GTE then shadow price is negative
@@ -278,15 +278,29 @@ object MathModel {
         pricesAndQuantitiesString += s"${c.constraintId} $$$shadowPrice\n"
       }
       //quantities
-      pricesAndQuantitiesString += "\n\n####BASIC VARS####\n"
-      for ((basicCol,rowIndex) <- basicColIndexForRow.zipWithIndex.filter(_._1 < variables.length)) {
-        pricesAndQuantitiesString += s"col:$basicCol row:$rowIndex ${variables(basicCol).varId} = ${rhsValues(rowIndex)}\n"
+      //Each row of basicColEachRow records the basic col for that row
+      variables = variables.zipWithIndex.map { case (v, vCol) =>
+        v.copy(result = basicColEachRow.zipWithIndex.find {
+          case (basicCol, _) => basicCol == vCol
+        } match {
+          case Some(tupleColRow) => rhsValues(tupleColRow._2)
+          case _ => 0.0
+        })
+      }
+      //For text summary
+      pricesAndQuantitiesString += "\n\n####QUANTITIES####\n"
+//            for ((basicCol,rowIndex) <- basicColByRow.zipWithIndex.filter(_._1 < variables.length)) {
+//              pricesAndQuantitiesString += s"col:$basicCol row:$rowIndex " +
+//                s"${variables(basicCol).varId} = ${rhsValues(rowIndex)}\n"
+//            }
+      for ((v, colIndex) <- variables.zipWithIndex) {
+        pricesAndQuantitiesString += s"${v.varId} = ${v.result}\n"
       }
       pricesAndQuantitiesString += "####\n"
 
       //Progress logging
       val thisMsg = s"\n\n>>>iteration: $iterationCount\nenteringVarCol: $enteringColNum" +
-        s"\nbasic cols: $basicColIndexForRow\nrhs: $rhsValues\nvarFactorCol: $varFactorEnteringCol" +
+        s"\nbasic cols: $basicColEachRow\nrhs: $rhsValues\nvarFactorCol: $varFactorEnteringCol" +
         s"\nentering row: $enteringRowNum\nfull matrix after:\n${fullMatrix.map(_.toString).mkString("\n")}"
       println(thisMsg)
       msg += thisMsg
