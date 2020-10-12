@@ -302,9 +302,11 @@ object MathModel {
           case (basicCol, _) => basicCol == vCol
         } match {
           case Some(tupleColRow) => rhsValues(tupleColRow._2)
-          case _ => 0.0
+          //Pass the objective back with the variables, else basic var is zero
+          case _ => if (v.varType == "objectiveVal") objectiveRhs else 0.0
         })
       }
+
       //For text summary
       pricesAndQuantitiesString += "\n\n####QUANTITIES####\n"
 //            for ((basicCol,rowIndex) <- basicColByRow.zipWithIndex.filter(_._1 < variables.length)) {
