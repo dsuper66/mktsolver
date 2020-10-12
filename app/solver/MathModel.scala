@@ -344,8 +344,8 @@ object MathModel {
 //    s"${Json.prettyPrint(Json.toJson(objectiveRhs))}\n${Json.prettyPrint(Json.toJson(constraints))}\n" +
 //      s"${Json.prettyPrint(Json.toJson(variables))}\n$msg"
 
-//    Json.toJson(Results(variables,constraints))
-    Json.toJson(variables)
+    Json.toJson(Results(variables,constraints))
+//    Json.toJson(variables)
   }
 
 }
