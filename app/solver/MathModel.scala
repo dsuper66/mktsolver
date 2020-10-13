@@ -94,7 +94,7 @@ object MathModel {
                        varId: String,
                        varType: String,
                        elementId: String,
-                       result: Double = 0.0 //result
+                       quantity: Double = 0.0 //result
                      )
 
   case class Results(
@@ -298,7 +298,7 @@ object MathModel {
       //quantities
       //Each row of basicColEachRow records the basic col for that row
       variables = variables.zipWithIndex.map { case (v, vCol) =>
-        v.copy(result = basicColEachRow.zipWithIndex.find {
+        v.copy(quantity = basicColEachRow.zipWithIndex.find {
           case (basicCol, _) => basicCol == vCol
         } match {
           case Some(tupleColRow) => rhsValues(tupleColRow._2)
@@ -314,7 +314,7 @@ object MathModel {
 //                s"${variables(basicCol).varId} = ${rhsValues(rowIndex)}\n"
 //            }
       for ((v, colIndex) <- variables.zipWithIndex) {
-        pricesAndQuantitiesString += s"${v.varId} = ${v.result}\n"
+        pricesAndQuantitiesString += s"${v.varId} = ${v.quantity}\n"
       }
       pricesAndQuantitiesString += "####\n"
 
