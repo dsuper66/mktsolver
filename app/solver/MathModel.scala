@@ -20,8 +20,9 @@ object MathModel {
                             elementType: String,
                             varType: String,
                             inEquality: String,
-                            rhsProperty: String,
                             rhsValue: Double,
+                            rhsProperty: String,
+                            factorValue: Double,
                             factorProperty: String
                           )
 
@@ -322,10 +323,10 @@ object MathModel {
       val thisMsg = s"\n\n>>>iteration:$iterationCount\nobj:$objectiveRhs\nenteringVarCol:$enteringColNum" +
         s"\nbasic cols: $basicColEachRow\nrhs: $rhsValues\nvarFactorCol: $varFactorEnteringCol" +
         s"\nentering row: $enteringRowNum\nfull matrix after:\n${fullMatrix.map(_.toString).mkString("\n")}"
-      println(thisMsg)
+//      println(thisMsg)
       msg += thisMsg
       //Price and quantity logging
-      println(pricesAndQuantitiesString)
+//      println(pricesAndQuantitiesString)
       msg += pricesAndQuantitiesString
 
       //Check for negative reduced costs to find entering column, if any
@@ -347,7 +348,6 @@ object MathModel {
 //      s"${Json.prettyPrint(Json.toJson(variables))}\n$msg"
 
     Json.toJson(Results(variables,constraints))
-//    Json.toJson(variables)
   }
 
 }

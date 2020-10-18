@@ -69,6 +69,8 @@ class TodoController @Inject()(
               //===Define the Constraint===
               //LE or EQ
               val inEquality = constraintDef.inEquality
+
+              //--RHS--
               //RHS from parent or value
               var rhsValue = 0.0
               //RHS from parent
@@ -87,19 +89,24 @@ class TodoController @Inject()(
               //Add the constraint entry
               val constraintId =
                 addConstraint(constraintDef.constraintType, parentElement.elementId, inEquality, rhsValue)
-              var msgForThisConstraint = s"\n${parentElement.elementId} " +
+              var msgForThisConstraint = s"\n\n${parentElement.elementId} " +
                 s"has constraint: ${constraintDef.constraintType}\nwith components:\n"
 
               //===Components of the Constraint===
+
+              //--Var Factor from parent--
               //Check if parent element has var in the constraint components
               if (constraintDef.varType != "") {
                 //Add the variable
                 val variableId = createVariable(parentElement.elementId, constraintDef.varType)
-                val varFactor = 1.0
+                //Add its factor
+                val varFactor = constraintDef.factorValue
+                //TODO... add factor from property
                 setVarFactor(variableId, constraintId, varFactor)
                 msgForThisConstraint += s" $varFactor * $variableId\n"
               }
 
+              //--Components--
               //Get the constraint components
               for ( //Get components where the constraint Id property matches
                 constraintComp <- constraintComps.filter(
@@ -167,12 +174,13 @@ class TodoController @Inject()(
             }
           }
 
+          println(
+            s"SCALA data:\n $modelElements\n====\n constraintDefs:\n$constraintDefs \n====\n" +
+              s"constraintComps:\n$constraintComps\n====\n  $msg\n" +
+              s"varFactors:\n$varFactorsString\n"
+          )
+
           Ok(solveModel)
-//          Ok(
-//            s"SCALA data:\n $modelElements\n====\n constraintDefs:\n$constraintDefs \n====\n" +
-//              s"constraintComps:\n$constraintComps\n====\n  $msg\n" +
-//              s"varFactors:\n$varFactorsString\n\n$solveModel"
-//          )
         }
         .getOrElse {
           BadRequest("Expecting application/json request body")
