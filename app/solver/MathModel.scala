@@ -243,7 +243,7 @@ object MathModel {
 
     //====Iterate====
     var iterationCount = 0
-    while (enteringColNum >= 0 && iterationCount < 12) {
+    while (enteringColNum >= 0 && iterationCount < 100) {
 
       //Find entering row for entering col (remove the objective row from the check)
       //Var factors are full matrix without last row and last col
