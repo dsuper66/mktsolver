@@ -246,97 +246,109 @@ object MathModel {
     while (enteringColNum >= 0 && iterationCount < 100) {
 
       //Find entering row for entering col (remove the objective row from the check)
-      //Var factors are full matrix without last row and last col
       val varFactorEnteringCol = fullMatrix.dropRight(1).map(row => row(enteringColNum))
       //Entering row is minimum ratio of rhs/factor where factor is > 0
-      val enteringRowNum = varFactorEnteringCol.zipWithIndex.filter {
-        case (rowValue,_) => rowValue > 0
-      }.minBy { case (rowValue, index) => rhsValues(index) / rowValue }._2
-      //Record the entering basic var
-      basicColEachRow = basicColEachRow.updated(enteringRowNum,enteringColNum)
+      val gtZeroRowsInEnteringCol = varFactorEnteringCol.zipWithIndex.filter {
+        case (rowValue,_) => rowValue > 0 }
+      //If no values in entering col are > 0 then cannot proceed
+      //(probably something wrong with the model definition, ideally report an error)
+      if (gtZeroRowsInEnteringCol.isEmpty) {
+        enteringColNum = -1 //signal we are done
+      }
+      else {
 
-      val enteringRow = fullMatrix(enteringRowNum)
-      //val pivotValue = fullMatrix(enteringRowNum)(enteringColNum)
+        //      val enteringRowNum = varFactorEnteringCol.zipWithIndex.filter {
+        //        case (rowValue,_) => rowValue > 0
+        //      }.minBy { case (rowValue, index) => rhsValues(index) / rowValue }._2
+        val enteringRowNum = gtZeroRowsInEnteringCol.minBy {
+          case (rowValue, index) => rhsValues(index) / rowValue
+        }._2
+        //Record the entering basic var
+        basicColEachRow = basicColEachRow.updated(enteringRowNum, enteringColNum)
 
-      //Adjust the full matrix to set all other rows to zero in entering col (also adjusts rhs and objective)
-      fullMatrix = fullMatrix.zipWithIndex.map { case (thisRow, rowIndex) =>
-        if (rowIndex == enteringRowNum) {
-          thisRow.map(row => row/enteringRow(enteringColNum))
-        }
-        else {
-          thisRow(enteringColNum) match {
-            case 0 => thisRow //if value in entering col is zero then thisRow is unchanged
-            case _ => thisRow.zipWithIndex.map {
-              case (colValue, colIndex) =>
-                colValue - enteringRow(colIndex)*(thisRow(enteringColNum)/enteringRow(enteringColNum))
+        val enteringRow = fullMatrix(enteringRowNum)
+        //val pivotValue = fullMatrix(enteringRowNum)(enteringColNum)
+
+        //Adjust the full matrix to set all other rows to zero in entering col (also adjusts rhs and objective)
+        fullMatrix = fullMatrix.zipWithIndex.map { case (thisRow, rowIndex) =>
+          if (rowIndex == enteringRowNum) {
+            thisRow.map(row => row / enteringRow(enteringColNum))
+          }
+          else {
+            thisRow(enteringColNum) match {
+              case 0 => thisRow //if value in entering col is zero then thisRow is unchanged
+              case _ => thisRow.zipWithIndex.map {
+                case (colValue, colIndex) =>
+                  colValue - enteringRow(colIndex) * (thisRow(enteringColNum) / enteringRow(enteringColNum))
+              }
             }
           }
         }
-      }
 
-      //Reduced costs are last row, without rhs... use this to find the next entering var
-      reducedCosts = fullMatrix.last.dropRight(1)
-      //RHS values (remove reduced costs row then get the last col of what remains)
-      rhsValues = fullMatrix.dropRight(1).map(row => row.last)
-      //Slack vars costs are reduced cost cols added after input vars
-      val slackCosts = reducedCosts.zipWithIndex.filter(_._2 >= variables.length).map(_._1)
-      //Objective
-      objectiveRhs = fullMatrix.last.last
+        //Reduced costs are last row, without rhs... use this to find the next entering var
+        reducedCosts = fullMatrix.last.dropRight(1)
+        //RHS values (remove reduced costs row then get the last col of what remains)
+        rhsValues = fullMatrix.dropRight(1).map(row => row.last)
+        //Slack vars costs are reduced cost cols added after input vars
+        val slackCosts = reducedCosts.zipWithIndex.filter(_._2 >= variables.length).map(_._1)
+        //Objective
+        objectiveRhs = fullMatrix.last.last
 
-      //Extract prices and quantities
-      //prices
-      constraints = constraints.zipWithIndex.map{case(c,i) => c.copy(shadowPrice = slackCosts(i))}
-      //For text summary
-      var pricesAndQuantitiesString = s"####\n\n####SHADOW PRICES####\n"
-      for ((c,rowIndex) <- constraints.zipWithIndex) {
-        //If constraint is GTE then shadow price is negative
-        var shadowPrice = c.shadowPrice //slackCosts(rowIndex)
-        if (shadowPrice > 0 && c.constraintType == "nodeBal" && c.constraintId.contains("LTE")) {
-          shadowPrice *= -1.0
+        //Extract prices and quantities
+        //prices
+        constraints = constraints.zipWithIndex.map { case (c, i) => c.copy(shadowPrice = slackCosts(i)) }
+        //For text summary
+        var pricesAndQuantitiesString = s"####\n\n####SHADOW PRICES####\n"
+        for ((c, rowIndex) <- constraints.zipWithIndex) {
+          //If constraint is GTE then shadow price is negative
+          var shadowPrice = c.shadowPrice //slackCosts(rowIndex)
+          if (shadowPrice > 0 && c.constraintType == "nodeBal" && c.constraintId.contains("LTE")) {
+            shadowPrice *= -1.0
+          }
+          pricesAndQuantitiesString += s"${c.constraintId} $$$shadowPrice\n"
         }
-        pricesAndQuantitiesString += s"${c.constraintId} $$$shadowPrice\n"
-      }
-      //quantities
-      //Each row of basicColEachRow records the basic col for that row
-      variables = variables.zipWithIndex.map { case (v, vCol) =>
-        v.copy(quantity = basicColEachRow.zipWithIndex.find {
-          case (basicCol, _) => basicCol == vCol
-        } match {
-          case Some(tupleColRow) => rhsValues(tupleColRow._2)
-          //Pass the objective back with the variables, else basic var is zero
-          case _ => if (v.varType == "objectiveVal") objectiveRhs else 0.0
-        })
-      }
+        //quantities
+        //Each row of basicColEachRow records the basic col for that row
+        variables = variables.zipWithIndex.map { case (v, vCol) =>
+          v.copy(quantity = basicColEachRow.zipWithIndex.find {
+            case (basicCol, _) => basicCol == vCol
+          } match {
+            case Some(tupleColRow) => rhsValues(tupleColRow._2)
+            //Pass the objective back with the variables, else basic var is zero
+            case _ => if (v.varType == "objectiveVal") objectiveRhs else 0.0
+          })
+        }
 
-      //For text summary
-      pricesAndQuantitiesString += "\n\n####QUANTITIES####\n"
-//            for ((basicCol,rowIndex) <- basicColByRow.zipWithIndex.filter(_._1 < variables.length)) {
-//              pricesAndQuantitiesString += s"col:$basicCol row:$rowIndex " +
-//                s"${variables(basicCol).varId} = ${rhsValues(rowIndex)}\n"
-//            }
-      for ((v, colIndex) <- variables.zipWithIndex) {
-        pricesAndQuantitiesString += s"${v.varId} = ${v.quantity}\n"
+        //For text summary
+        pricesAndQuantitiesString += "\n\n####QUANTITIES####\n"
+        //            for ((basicCol,rowIndex) <- basicColByRow.zipWithIndex.filter(_._1 < variables.length)) {
+        //              pricesAndQuantitiesString += s"col:$basicCol row:$rowIndex " +
+        //                s"${variables(basicCol).varId} = ${rhsValues(rowIndex)}\n"
+        //            }
+        for ((v, colIndex) <- variables.zipWithIndex) {
+          pricesAndQuantitiesString += s"${v.varId} = ${v.quantity}\n"
+        }
+        pricesAndQuantitiesString += "####\n"
+
+        //Progress logging
+        val thisMsg = s"\n\n>>>iteration:$iterationCount\nobj:$objectiveRhs\nenteringVarCol:$enteringColNum" +
+          s"\nbasic cols: $basicColEachRow\nrhs: $rhsValues\nvarFactorCol: $varFactorEnteringCol" +
+          s"\nentering row: $enteringRowNum\nfull matrix after:\n${fullMatrix.map(_.toString).mkString("\n")}"
+        //      println(thisMsg)
+        msg += thisMsg
+        //Price and quantity logging
+        //      println(pricesAndQuantitiesString)
+        msg += pricesAndQuantitiesString
+
+        //Check for negative reduced costs to find entering column, if any
+        enteringColNum = {
+          val ltZeroSeq = reducedCosts.zipWithIndex.filter { case (colValue, _) => colValue < 0 }
+          if (ltZeroSeq.nonEmpty) ltZeroSeq.minBy { case (colValue, _) => colValue }._2
+          else -1
+        }
+
+        iterationCount += 1
       }
-      pricesAndQuantitiesString += "####\n"
-
-      //Progress logging
-      val thisMsg = s"\n\n>>>iteration:$iterationCount\nobj:$objectiveRhs\nenteringVarCol:$enteringColNum" +
-        s"\nbasic cols: $basicColEachRow\nrhs: $rhsValues\nvarFactorCol: $varFactorEnteringCol" +
-        s"\nentering row: $enteringRowNum\nfull matrix after:\n${fullMatrix.map(_.toString).mkString("\n")}"
-//      println(thisMsg)
-      msg += thisMsg
-      //Price and quantity logging
-//      println(pricesAndQuantitiesString)
-      msg += pricesAndQuantitiesString
-
-      //Check for negative reduced costs to find entering column, if any
-      enteringColNum = {
-        val ltZeroSeq = reducedCosts.zipWithIndex.filter{case(colValue, _) => colValue < 0}
-        if (ltZeroSeq.nonEmpty) ltZeroSeq.minBy{case(colValue, _) => colValue}._2
-        else -1
-      }
-
-      iterationCount += 1
     }
 
     //Return the results
