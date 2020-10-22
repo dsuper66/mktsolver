@@ -24,10 +24,10 @@ class TodoController @Inject()(
     }
 
   def getPropertyAsDoubleElseDefault(
-                                element: ModelElement,
-                                propertyType: String,
-                              default: Double
-                              ): Double = {
+                                      element: ModelElement,
+                                      propertyType: String,
+                                      default: Double
+                                    ): Double = {
 
     val matchingProperty = element.properties.find(property => property._1 == propertyType)
 
@@ -101,7 +101,7 @@ class TodoController @Inject()(
                 val variableId = createVariable(parentElement.elementId, constraintDef.varType)
                 //Add its factor
                 val varFactor = constraintDef.factorValue
-                //TODO... add factor from property
+                //TODO... add factor from property (if there ever is one)
                 setVarFactor(variableId, constraintId, varFactor)
                 msgForThisConstraint += s" $varFactor * $variableId\n"
               }
@@ -118,24 +118,29 @@ class TodoController @Inject()(
                 //(case classes are especially useful for pattern matching...)
 
                 //elements where elementType matches constraint component
-                val childElementsMatchingType = modelElements.filter(
+                val childrenMatchingElementType = modelElements.filter(
                   _.elementType == constraintComp.elementType
                 )
-                //then check for property map from parent to child or child to parent
+                //then check for property map from parent to child, or child to parent, or to self
                 for (
                   childElement <-
-                    childElementsMatchingType
-                      .filter(childElementMatching =>
-                        (//parent matches propertyMap from child
+                    childrenMatchingElementType
+                      .filter(childMatchingType =>
+                        (
                           (constraintComp.propertyMap == "all") //all bids and offers are in objective
-                            ||
-                            childElementMatching.properties.exists(property =>
+                            || //parent matches propertyMap from child
+                            //e.g. nodeBal... propertyMap is fromBus, child is dirBranch matching parent bus
+                            childMatchingType.properties.exists(property =>
                               (property._1 == constraintComp.propertyMap
                                 && property._2 == parentElement.elementId))
                             || //or child matches propertyMap from parent
+                            //e.g. powerflow... propertyMap is fromBus, child is bus matching child branch
                             parentElement.properties.exists(property =>
                               property._1 == constraintComp.propertyMap
-                                && property._2 == childElementMatching.elementId)
+                                && property._2 == childMatchingType.elementId)
+                            ||
+                            constraintComp.propertyMap == "self"
+                              && parentElement.elementId == childMatchingType.elementId
                           )
                       )
                 ) {
@@ -147,7 +152,7 @@ class TodoController @Inject()(
                   varFactor = (varFactor
                     * getPropertyAsDoubleElseDefault(
                     childElement,
-                    constraintComp.factorProperty,1.0
+                    constraintComp.factorProperty, 1.0
                   )
                     * getPropertyAsDoubleElseDefault(
                     parentElement,
