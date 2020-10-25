@@ -243,7 +243,7 @@ object MathModel {
 
     //====Iterate====
     var iterationCount = 0
-    while (enteringColNum >= 0 && iterationCount < 100) {
+    while (enteringColNum >= 0 && iterationCount < 200) {
 
       //Find entering row for entering col (remove the objective row from the check)
       val varFactorEnteringCol = fullMatrix.dropRight(1).map(row => row(enteringColNum))
