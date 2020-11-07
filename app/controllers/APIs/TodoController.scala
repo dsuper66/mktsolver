@@ -86,11 +86,14 @@ class TodoController @Inject()(
                 rhsValue = constraintDef.rhsValue
               }
 
-              //Add the constraint entry
-              val constraintId =
-                addConstraint(constraintDef.constraintType, parentElement.elementId, inEquality, rhsValue)
-              var msgForThisConstraint = s"\n\n${parentElement.elementId} " +
-                s"has constraint: ${constraintDef.constraintType}\nwith components:\n"
+
+              val constraintId = s"${constraintDef.constraintType}.${parentElement.elementId}"
+              //val constraintId =
+              //  addConstraint(constraintDef.constraintType, parentElement.elementId, inEquality, rhsValue)
+              var constraintString = s"${constraintId}:\n"
+
+              //              var msgForThisConstraint = s"\n\n${parentElement.elementId} " +
+//                s"has constraint: ${constraintDef.constraintType}\nwith components:\n"
 
               //===Components of the Constraint===
 
@@ -103,7 +106,8 @@ class TodoController @Inject()(
                 val varFactor = constraintDef.factorValue
                 //TODO... add factor from property (if there ever is one)
                 setVarFactor(variableId, constraintId, varFactor)
-                msgForThisConstraint += s" $varFactor * $variableId\n"
+//                msgForThisConstraint += s" $varFactor * $variableId\n"
+                constraintString += s" $varFactor * $variableId\n"
               }
 
               //--Components--
@@ -168,14 +172,24 @@ class TodoController @Inject()(
                   //The varFactor relates the variable to the particular constraint
                   setVarFactor(variableId, constraintId, varFactor)
 
-                  msgForThisConstraint += s" $varFactor * $variableId \n"
+//                  msgForThisConstraint += s" $varFactor * $variableId \n"
+                  constraintString += s" $varFactor * $variableId \n"
                 }
               } //done components
 
               //Inequality RHS
-              msgForThisConstraint += s" $inEquality $rhsValue"
+//              msgForThisConstraint += s" $inEquality $rhsValue"
+              constraintString += s" $inEquality $rhsValue"
 
-              msg += msgForThisConstraint
+              addConstraint(
+                constraintId,
+                constraintDef.constraintType,
+                parentElement.elementId,
+                inEquality,
+                rhsValue,
+                constraintString)
+
+              msg += s"$constraintString\n\n" //msgForThisConstraint
             }
           }
 

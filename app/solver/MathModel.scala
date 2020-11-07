@@ -8,33 +8,33 @@ object MathModel {
 //  case class Element(elementId: String, bus: String)
 
   case class ModelElement(
-                           elementId: String,
-                           elementType: String,
-                           properties: Map[String, Any]
-                         )
+      elementId: String,
+      elementType: String,
+      properties: Map[String, Any]
+  )
 
   case class ModelElements(modelElements: Seq[ModelElement])
 
   case class ConstraintDef(
-                            constraintType: String,
-                            elementType: String,
-                            varType: String,
-                            inEquality: String,
-                            rhsValue: Double,
-                            rhsProperty: String,
-                            factorValue: Double,
-                            factorProperty: String
-                          )
+      constraintType: String,
+      elementType: String,
+      varType: String,
+      inEquality: String,
+      rhsValue: Double,
+      rhsProperty: String,
+      factorValue: Double,
+      factorProperty: String
+  )
 
   case class ConstraintComp(
-                             constraintType: String,
-                             elementType: String,
-                             propertyMap: String,
-                             varType: String,
-                             factorParentProperty: String,
-                             factorValue: Double,
-                             factorProperty: String
-                           )
+      constraintType: String,
+      elementType: String,
+      propertyMap: String,
+      varType: String,
+      factorParentProperty: String,
+      factorValue: Double,
+      factorProperty: String
+  )
 
   object ModelElement {
     //Reads looks for this implicit which tells it how to read [String,Any]
@@ -46,8 +46,8 @@ object MathModel {
     def metaValueToJsValue(m: JsValue): JsResult[Any] = {
       m match {
         case JsBoolean(b) => JsSuccess(b)
-        case JsNumber(n) => JsSuccess(n)
-        case JsString(s) => JsSuccess(s)
+        case JsNumber(n)  => JsSuccess(n)
+        case JsString(s)  => JsSuccess(s)
         case JsArray(arr) =>
           val list = arr.map(metaValueToJsValue)
           JsSuccess(list)
@@ -77,31 +77,32 @@ object MathModel {
   //=====================
 
   case class VarFactor(
-                        varId: String,
-                        constraintId: String,
-                        value: Double
-                      )
+      varId: String,
+      constraintId: String,
+      value: Double
+  )
 
   case class Constraint(
-                         constraintId: String,
-                         constraintType: String,
-                         elementId: String,
-                         inequality: String,
-                         rhsValue: Double,
-                         shadowPrice: Double = 0.0 //result
-                       )
+      constraintId: String,
+      constraintType: String,
+      elementId: String,
+      inequality: String,
+      rhsValue: Double,
+      constraintString: String,
+      shadowPrice: Double = 0.0
+  )
 
   case class Variable(
-                       varId: String,
-                       varType: String,
-                       elementId: String,
-                       quantity: Double = 0.0 //result
-                     )
+      varId: String,
+      varType: String,
+      elementId: String,
+      quantity: Double = 0.0 //result
+  )
 
   case class Results(
-                    variables: Seq[Variable],
-                    constraints: Seq[Constraint]
-                    )
+      variables: Seq[Variable],
+      constraints: Seq[Constraint]
+  )
 
   object Constraint {
     //need Json deserializer for type
@@ -121,13 +122,13 @@ object MathModel {
   var varFactorInputs: Seq[VarFactor] = Seq()
 
   var constraints: Seq[Constraint] = Seq()
-  var objectiveFn: Constraint = Constraint("", "", "", "", 0.0)
+  var objectiveFn: Constraint = Constraint("", "", "", "", 0.0, "")
   var objectiveRhs: Double = 0.0
 
   var variables: Seq[Variable] = Seq()
   var reducedCosts: Seq[Double] = Seq()
   var rhsValues: Seq[Double] = Seq()
-  var basicColEachRow:  Seq[Int] = Seq()
+  var basicColEachRow: Seq[Int] = Seq()
 
   //Populate
   def resetMathModel(): Unit = {
@@ -137,17 +138,25 @@ object MathModel {
     variables = Seq()
     reducedCosts = Seq()
     rhsValues = Seq()
-    objectiveFn = Constraint("", "", "", "", 0.0)
+    objectiveFn = Constraint("", "", "", "", 0.0, "")
     objectiveRhs = 0.0
   }
 
-  def addConstraint(constraintType: String, elementId: String, inequality: String, rhsValue: Double): String = {
-    val constraintId = s"$constraintType.$elementId"
-    val newC = Constraint(constraintId, constraintType, elementId, inequality, rhsValue)
+  def addConstraint(
+      constraintId: String,
+      constraintType: String,
+      elementId: String,
+      inequality: String,
+      rhsValue: Double,
+      constraintString: String
+  ): String = {
+//    val constraintId = s"$constraintType.$elementId"
+    val newC = {
+      Constraint(constraintId, constraintType, elementId, inequality, rhsValue, constraintString)
+    }
     if (constraintType == "objective") {
       objectiveFn = newC
-    }
-    else if (!constraints.exists(c => c.constraintId == constraintId)) {
+    } else if (!constraints.exists(c => c.constraintId == constraintId)) {
       constraints = constraints :+ newC
     }
     constraintId
@@ -161,13 +170,15 @@ object MathModel {
     varId
   }
 
+  //Create a varFactor and add it if not already
   def setVarFactor(
-                    varId: String,
-                    constraintId: String,
-                    value: Double
-                  ): Unit = {
+      varId: String,
+      constraintId: String,
+      value: Double
+  ): Unit = {
     val varFactor = VarFactor(varId, constraintId, value)
-    if (!varFactorInputs.contains(varFactor)) varFactorInputs = varFactorInputs :+ varFactor
+    if (!varFactorInputs.contains(varFactor))
+      varFactorInputs = varFactorInputs :+ varFactor
   }
 
   //Report
@@ -178,10 +189,11 @@ object MathModel {
   def varFactorsForConstraint(c: Constraint): Seq[Double] = {
     //If there is a varFactor for this constraint+var then add it otherwise add zero
     variables.map(v =>
-      varFactorInputs.find(vF => (vF.varId, vF.constraintId) == (v.varId, c.constraintId))
-      match {
+      varFactorInputs.find(vF =>
+        (vF.varId, vF.constraintId) == (v.varId, c.constraintId)
+      ) match {
         case Some(optVF) => optVF.value
-        case None => 0.0
+        case None        => 0.0
       }
     )
   }
@@ -195,8 +207,9 @@ object MathModel {
     for (c <- constraints) {
       varFactorRows :+= varFactorsForConstraint(c)
       //EQ has corresponding GTE constraint
-      if (c.inequality == "eq") varFactorRows :+=
-        varFactorsForConstraint(c).map(vF => if (vF != 0) -vF else 0.0)
+      if (c.inequality == "eq")
+        varFactorRows :+=
+          varFactorsForConstraint(c).map(vF => if (vF != 0) -vF else 0.0)
     }
 
     //Convert EQ constraints into LTE and GTE
@@ -204,11 +217,26 @@ object MathModel {
     var constraintsWithEq: Seq[Constraint] = Seq()
     for (c <- constraints) {
       constraintsWithEq = constraintsWithEq ++ {
-        c.inequality
-        match {
-          case "eq" => Seq(
-            Constraint(s"${c.constraintId}.LTE", c.constraintType, c.elementId, c.inequality, c.rhsValue),
-            Constraint(s"${c.constraintId}.GTE", c.constraintType, c.elementId, c.inequality, c.rhsValue))
+        c.inequality match {
+          case "eq" =>
+            Seq(
+              Constraint(
+                s"${c.constraintId}.LTE",
+                c.constraintType,
+                c.elementId,
+                c.inequality,
+                c.rhsValue,
+                c.constraintString
+              ),
+              Constraint(
+                s"${c.constraintId}.GTE",
+                c.constraintType,
+                c.elementId,
+                c.inequality,
+                c.rhsValue,
+                c.constraintString
+              )
+            )
           case _ => Seq(c)
         }
       }
@@ -220,25 +248,35 @@ object MathModel {
 
     //Add slack vars...
     //...varFactors rows
-    varFactorRows = varFactorRows.map(
-      row => row ++ Seq.tabulate(constraints.length)(col => if (col == varFactorRows.indexOf(row)) 1.0 else 0.0))
+    varFactorRows = varFactorRows.map(row =>
+      row ++ Seq.tabulate(constraints.length)(col =>
+        if (col == varFactorRows.indexOf(row)) 1.0 else 0.0
+      )
+    )
     //...reducedCosts row
     reducedCosts = reducedCosts ++ Seq.fill(constraints.length)(0.0)
 
     //Record index of basic cols
-    basicColEachRow = Seq.tabulate(constraints.length)(col => variables.length + col)
+    basicColEachRow =
+      Seq.tabulate(constraints.length)(col => variables.length + col)
 
-    var msg = "\n\n*****SCALA SOLVE*************************************************"
+    var msg =
+      "\n\n*****SCALA SOLVE*************************************************"
 
     var enteringColNum = {
-      val ltZeroSeq = reducedCosts.zipWithIndex.filter{case(colValue, _) => colValue < 0}
-      if (ltZeroSeq.nonEmpty) ltZeroSeq.minBy{case(colValue, _) => colValue}._2
+      val ltZeroSeq = reducedCosts.zipWithIndex.filter {
+        case (colValue, _) => colValue < 0
+      }
+      if (ltZeroSeq.nonEmpty) ltZeroSeq.minBy {
+        case (colValue, _) => colValue
+      }._2
       else -1
     }
 
     //Add reduced costs and rhs to the varFactors
-    var fullMatrix = (varFactorRows :+ reducedCosts).zipWithIndex.map { case (rowValues, rowIndex) =>
-      rowValues :+ (rhsValues :+ objectiveRhs) (rowIndex)
+    var fullMatrix = (varFactorRows :+ reducedCosts).zipWithIndex.map {
+      case (rowValues, rowIndex) =>
+        rowValues :+ (rhsValues :+ objectiveRhs)(rowIndex)
     }
 
     //====Iterate====
@@ -246,16 +284,17 @@ object MathModel {
     while (enteringColNum >= 0 && iterationCount < 200) {
 
       //Find entering row for entering col (remove the objective row from the check)
-      val varFactorEnteringCol = fullMatrix.dropRight(1).map(row => row(enteringColNum))
+      val varFactorEnteringCol =
+        fullMatrix.dropRight(1).map(row => row(enteringColNum))
       //Entering row is minimum ratio of rhs/factor where factor is > 0
       val gtZeroRowsInEnteringCol = varFactorEnteringCol.zipWithIndex.filter {
-        case (rowValue,_) => rowValue > 0 }
+        case (rowValue, _) => rowValue > 0
+      }
       //If no values in entering col are > 0 then cannot proceed
       //(probably something wrong with the model definition, ideally report an error)
       if (gtZeroRowsInEnteringCol.isEmpty) {
         enteringColNum = -1 //signal we are done
-      }
-      else {
+      } else {
 
         //      val enteringRowNum = varFactorEnteringCol.zipWithIndex.filter {
         //        case (rowValue,_) => rowValue > 0
@@ -264,25 +303,30 @@ object MathModel {
           case (rowValue, index) => rhsValues(index) / rowValue
         }._2
         //Record the entering basic var
-        basicColEachRow = basicColEachRow.updated(enteringRowNum, enteringColNum)
+        basicColEachRow =
+          basicColEachRow.updated(enteringRowNum, enteringColNum)
 
         val enteringRow = fullMatrix(enteringRowNum)
         //val pivotValue = fullMatrix(enteringRowNum)(enteringColNum)
 
         //Adjust the full matrix to set all other rows to zero in entering col (also adjusts rhs and objective)
-        fullMatrix = fullMatrix.zipWithIndex.map { case (thisRow, rowIndex) =>
-          if (rowIndex == enteringRowNum) {
-            thisRow.map(row => row / enteringRow(enteringColNum))
-          }
-          else {
-            thisRow(enteringColNum) match {
-              case 0 => thisRow //if value in entering col is zero then thisRow is unchanged
-              case _ => thisRow.zipWithIndex.map {
-                case (colValue, colIndex) =>
-                  colValue - enteringRow(colIndex) * (thisRow(enteringColNum) / enteringRow(enteringColNum))
+        fullMatrix = fullMatrix.zipWithIndex.map {
+          case (thisRow, rowIndex) =>
+            if (rowIndex == enteringRowNum) {
+              thisRow.map(row => row / enteringRow(enteringColNum))
+            } else {
+              thisRow(enteringColNum) match {
+                case 0 =>
+                  thisRow //if value in entering col is zero then thisRow is unchanged
+                case _ =>
+                  thisRow.zipWithIndex.map {
+                    case (colValue, colIndex) =>
+                      colValue - enteringRow(colIndex) * (thisRow(
+                        enteringColNum
+                      ) / enteringRow(enteringColNum))
+                  }
               }
             }
-          }
         }
 
         //Reduced costs are last row, without rhs... use this to find the next entering var
@@ -290,33 +334,40 @@ object MathModel {
         //RHS values (remove reduced costs row then get the last col of what remains)
         rhsValues = fullMatrix.dropRight(1).map(row => row.last)
         //Slack vars costs are reduced cost cols added after input vars
-        val slackCosts = reducedCosts.zipWithIndex.filter(_._2 >= variables.length).map(_._1)
+        val slackCosts =
+          reducedCosts.zipWithIndex.filter(_._2 >= variables.length).map(_._1)
         //Objective
         objectiveRhs = fullMatrix.last.last
 
         //Extract prices and quantities
         //prices
-        constraints = constraints.zipWithIndex.map { case (c, i) => c.copy(shadowPrice = slackCosts(i)) }
+        constraints = constraints.zipWithIndex.map {
+          case (c, i) => c.copy(shadowPrice = slackCosts(i))
+        }
         //For text summary
         var pricesAndQuantitiesString = s"####\n\n####SHADOW PRICES####\n"
         for ((c, rowIndex) <- constraints.zipWithIndex) {
           //If constraint is GTE then shadow price is negative
           var shadowPrice = c.shadowPrice //slackCosts(rowIndex)
-          if (shadowPrice > 0 && c.constraintType == "nodeBal" && c.constraintId.contains("LTE")) {
+          if (
+            shadowPrice > 0 && c.constraintType == "nodeBal" && c.constraintId
+              .contains("LTE")
+          ) {
             shadowPrice *= -1.0
           }
           pricesAndQuantitiesString += s"${c.constraintId} $$$shadowPrice\n"
         }
         //quantities
         //Each row of basicColEachRow records the basic col for that row
-        variables = variables.zipWithIndex.map { case (v, vCol) =>
-          v.copy(quantity = basicColEachRow.zipWithIndex.find {
-            case (basicCol, _) => basicCol == vCol
-          } match {
-            case Some(tupleColRow) => rhsValues(tupleColRow._2)
-            //Pass the objective back with the variables, else basic var is zero
-            case _ => if (v.varType == "objectiveVal") objectiveRhs else 0.0
-          })
+        variables = variables.zipWithIndex.map {
+          case (v, vCol) =>
+            v.copy(quantity = basicColEachRow.zipWithIndex.find {
+              case (basicCol, _) => basicCol == vCol
+            } match {
+              case Some(tupleColRow) => rhsValues(tupleColRow._2)
+              //Pass the objective back with the variables, else basic var is zero
+              case _ => if (v.varType == "objectiveVal") objectiveRhs else 0.0
+            })
         }
 
         //For text summary
@@ -331,10 +382,13 @@ object MathModel {
         pricesAndQuantitiesString += "####\n"
 
         //Progress logging
-        val thisMsg = s"\n\n>>>iteration:$iterationCount\nobj:$objectiveRhs\nenteringVarCol:$enteringColNum" +
-          s"\nbasic cols: $basicColEachRow\nrhs: $rhsValues\nvarFactorCol: $varFactorEnteringCol" +
-          s"\nentering row: $enteringRowNum\nfull matrix after:\n${fullMatrix.map(_.toString).mkString("\n")}"
-        //      println(thisMsg)
+        val thisMsg = s"\n\n>>>iteration:$iterationCount\nobj:$objectiveRhs" //+
+//          s"\nenteringVarCol:$enteringColNum" +
+//          s"\nbasic cols: $basicColEachRow\nrhs: $rhsValues\nvarFactorCol: $varFactorEnteringCol" +
+//          s"\nentering row: $enteringRowNum\n"
+
+        println(thisMsg)
+
         msg += thisMsg
         //Price and quantity logging
         //      println(pricesAndQuantitiesString)
@@ -342,8 +396,12 @@ object MathModel {
 
         //Check for negative reduced costs to find entering column, if any
         enteringColNum = {
-          val ltZeroSeq = reducedCosts.zipWithIndex.filter { case (colValue, _) => colValue < 0 }
-          if (ltZeroSeq.nonEmpty) ltZeroSeq.minBy { case (colValue, _) => colValue }._2
+          val ltZeroSeq = reducedCosts.zipWithIndex.filter {
+            case (colValue, _) => colValue < 0
+          }
+          if (ltZeroSeq.nonEmpty) ltZeroSeq.minBy {
+            case (colValue, _) => colValue
+          }._2
           else -1
         }
 
@@ -358,8 +416,8 @@ object MathModel {
 
 //    s"${Json.prettyPrint(Json.toJson(objectiveRhs))}\n${Json.prettyPrint(Json.toJson(constraints))}\n" +
 //      s"${Json.prettyPrint(Json.toJson(variables))}\n$msg"
-
-    Json.toJson(Results(variables,constraints))
+    constraints :+= objectiveFn
+    Json.toJson(Results(variables, constraints))
   }
 
 }
