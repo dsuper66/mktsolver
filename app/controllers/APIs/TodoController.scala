@@ -1,4 +1,4 @@
-package controllers.api
+package controllers.APIs
 
 import javax.inject._
 import models.Todo
@@ -107,7 +107,7 @@ class TodoController @Inject()(
                 //TODO... add factor from property (if there ever is one)
                 setVarFactor(variableId, constraintId, varFactor)
 //                msgForThisConstraint += s" $varFactor * $variableId\n"
-                constraintString += s" $varFactor * $variableId\n"
+                constraintString += s" ${if (varFactor > 0) "+" else ""}$varFactor * $variableId\n"
               }
 
               //--Components--
@@ -173,7 +173,7 @@ class TodoController @Inject()(
                   setVarFactor(variableId, constraintId, varFactor)
 
 //                  msgForThisConstraint += s" $varFactor * $variableId \n"
-                  constraintString += s" $varFactor * $variableId \n"
+                  constraintString += s" ${if (varFactor > 0) "+" else ""}$varFactor * $variableId \n"
                 }
               } //done components
 
