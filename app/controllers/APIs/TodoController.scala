@@ -1,4 +1,4 @@
-package controllers.APIs
+package controllers.api
 
 import javax.inject._
 import models.Todo
