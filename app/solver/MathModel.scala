@@ -416,7 +416,7 @@ object MathModel {
 //    s"${Json.prettyPrint(Json.toJson(objectiveRhs))}\n${Json.prettyPrint(Json.toJson(constraints))}\n" +
 //      s"${Json.prettyPrint(Json.toJson(variables))}\n$msg"
 
-    variables :+= Variable("mathModel001.iterationCount","iterationCount","mathModel001",iterationCount)
+    variables :+= Variable("mathModel001.iterationCount","iterationCount","mathModel001",iterationCount.toDouble)
     constraints :+= objectiveFn
     Json.toJson(Results(variables, constraints))
   }
