@@ -10,7 +10,7 @@ GET     /                           controllers.HomeController.index
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
 #  api controllers mapping
-GET     /api/todos                  controllers.api.TodoController.getAll
+#GET     /api/todos                  controllers.api.TodoController.getAll
 
 
 #  api controllers mapping

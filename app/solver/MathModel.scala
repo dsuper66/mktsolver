@@ -346,7 +346,7 @@ object MathModel {
         }
         //For text summary
         var pricesAndQuantitiesString = s"####\n\n####SHADOW PRICES####\n"
-        for ((c, rowIndex) <- constraints.zipWithIndex) {
+        for (c <- constraints) {
           //If constraint is GTE then shadow price is negative
           var shadowPrice = c.shadowPrice //slackCosts(rowIndex)
           if (
@@ -376,22 +376,21 @@ object MathModel {
         //              pricesAndQuantitiesString += s"col:$basicCol row:$rowIndex " +
         //                s"${variables(basicCol).varId} = ${rhsValues(rowIndex)}\n"
         //            }
-        for ((v, colIndex) <- variables.zipWithIndex) {
+        for (v <- variables) {
           pricesAndQuantitiesString += s"${v.varId} = ${v.quantity}\n"
         }
         pricesAndQuantitiesString += "####\n"
 
         //Progress logging
         val thisMsg = s"\n\n>>>iteration:$iterationCount\nobj:$objectiveRhs" //+
-//          s"\nenteringVarCol:$enteringColNum" +
-//          s"\nbasic cols: $basicColEachRow\nrhs: $rhsValues\nvarFactorCol: $varFactorEnteringCol" +
-//          s"\nentering row: $enteringRowNum\n"
+//          s"\n enteringVarCol:$enteringColNum" +
+//          s"\n basic cols: $basicColEachRow\n rhs: $rhsValues\n varFactorCol: $varFactorEnteringCol" +
+//          s"\n entering row: $enteringRowNum\n"
 
         println(thisMsg)
 
         msg += thisMsg
         //Price and quantity logging
-        //      println(pricesAndQuantitiesString)
         msg += pricesAndQuantitiesString
 
         //Check for negative reduced costs to find entering column, if any
@@ -410,12 +409,14 @@ object MathModel {
     }
 
     //Return the results
-//    s"${fullMatrix.map(_.toString).mkString("\n")} \nreduced costs\n${reducedCosts.toString()} " +
-//      s"\nconstraints\n${constraints.map(_.toString).mkString("\n")}\n$msg"
+//    s"${fullMatrix.map(_.toString).mkString("\n")} \n reduced costs\n${reducedCosts.toString()} " +
+//      s"\n constraints\n${constraints.map(_.toString).mkString("\n")}\n$msg"
 //    s"\n$msg"
 
 //    s"${Json.prettyPrint(Json.toJson(objectiveRhs))}\n${Json.prettyPrint(Json.toJson(constraints))}\n" +
 //      s"${Json.prettyPrint(Json.toJson(variables))}\n$msg"
+
+    variables :+= Variable("mathModel001.objectiveVal","objectiveVal","mathModel001",iterationCount)
     constraints :+= objectiveFn
     Json.toJson(Results(variables, constraints))
   }

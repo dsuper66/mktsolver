@@ -1,7 +1,7 @@
 package controllers.api
 
 import javax.inject._
-import models.Todo
+//import models.Todo
 import play.api.libs.json._
 import play.api.mvc._
 // import scala.util.parsing.json._
@@ -15,13 +15,13 @@ class TodoController @Inject()(
                                 cc: ControllerComponents
                               ) extends AbstractController(cc) {
 
-  implicit val todoFormat = Json.format[Todo]
+//  implicit val todoFormat = Json.format[Todo]
 
-  def getAll =
-    Action {
-      val todo = Todo(1, "item 1", false)
-      Ok(Json.toJson(todo))
-    }
+//  def getAll =
+//    Action {
+//      val todo = Todo(1, "item 1", false)
+//      Ok(Json.toJson(todo))
+//    }
 
   def getPropertyAsDoubleElseDefault(
                                       element: ModelElement,
@@ -88,9 +88,7 @@ class TodoController @Inject()(
 
 
               val constraintId = s"${constraintDef.constraintType}.${parentElement.elementId}"
-              //val constraintId =
-              //  addConstraint(constraintDef.constraintType, parentElement.elementId, inEquality, rhsValue)
-              var constraintString = s"${constraintId}:\n"
+              var constraintString = s"$constraintId:\n"
 
               //              var msgForThisConstraint = s"\n\n${parentElement.elementId} " +
 //                s"has constraint: ${constraintDef.constraintType}\nwith components:\n"
@@ -106,7 +104,6 @@ class TodoController @Inject()(
                 val varFactor = constraintDef.factorValue
                 //TODO... add factor from property (if there ever is one)
                 setVarFactor(variableId, constraintId, varFactor)
-//                msgForThisConstraint += s" $varFactor * $variableId\n"
                 constraintString += s" ${if (varFactor > 0) "+" else ""}$varFactor * $variableId\n"
               }
 
@@ -135,8 +132,8 @@ class TodoController @Inject()(
                             || //parent matches propertyMap from child
                             //e.g. nodeBal... propertyMap is fromBus, child is dirBranch matching parent bus
                             childMatchingType.properties.exists(property =>
-                              (property._1 == constraintComp.propertyMap
-                                && property._2 == parentElement.elementId))
+                              property._1 == constraintComp.propertyMap
+                                && property._2 == parentElement.elementId)
                             || //or child matches propertyMap from parent
                             //e.g. powerflow... propertyMap is fromBus, child is bus matching child branch
                             parentElement.properties.exists(property =>
@@ -172,13 +169,11 @@ class TodoController @Inject()(
                   //The varFactor relates the variable to the particular constraint
                   setVarFactor(variableId, constraintId, varFactor)
 
-//                  msgForThisConstraint += s" $varFactor * $variableId \n"
                   constraintString += s" ${if (varFactor > 0) "+" else ""}$varFactor * $variableId \n"
                 }
               } //done components
 
               //Inequality RHS
-//              msgForThisConstraint += s" $inEquality $rhsValue"
               constraintString += s" $inEquality $rhsValue"
 
               addConstraint(
