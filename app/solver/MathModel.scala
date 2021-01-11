@@ -387,7 +387,8 @@ object MathModel {
 //          s"\n basic cols: $basicColEachRow\n rhs: $rhsValues\n varFactorCol: $varFactorEnteringCol" +
 //          s"\n entering row: $enteringRowNum\n"
 
-        println(thisMsg)
+        //Uncomment this to print out detailed solver progress
+        //println(thisMsg)
 
         msg += thisMsg
         //Price and quantity logging

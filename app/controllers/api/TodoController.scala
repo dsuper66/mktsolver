@@ -42,6 +42,7 @@ class TodoController @Inject()(
     Action { request: Request[AnyContent] =>
       // response().setHeader(CACHE_CONTROL, "max-age=3600");
 
+      println("ip:" + request.remoteAddress)
       val body: AnyContent = request.body
       val jsonBody: Option[JsValue] = body.asJson
 
