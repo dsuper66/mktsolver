@@ -95,7 +95,7 @@ class TodoController @Inject()(
               var constraintString = s"$constraintId:\n"
 
               //              var msgForThisConstraint = s"\n\n${parentElement.elementId} " +
-//                s"has constraint: ${constraintDef.constraintType}\nwith components:\n"
+//                s"has constraint: ${constraintDef.constraintType}\n with components:\n"
 
               //===Components of the Constraint===
 
@@ -139,7 +139,7 @@ class TodoController @Inject()(
                               property._1 == constraintComp.propertyMap
                                 && property._2 == parentElement.elementId)
                             || //or child matches propertyMap from parent
-                            //e.g. powerflow... propertyMap is fromBus, child is bus matching child branch
+                            //e.g. power flow... propertyMap is fromBus, child is bus matching child branch
                             parentElement.properties.exists(property =>
                               property._1 == constraintComp.propertyMap
                                 && property._2 == childMatchingType.elementId)
@@ -208,7 +208,7 @@ class TodoController @Inject()(
           )
 
           //Log the ip address
-          solverOptions.find(k=>k=="ipAddress") match {
+          solverOptions.find(data=>data.key == "ipAddress") match {
             case Some(data) => println ("ip address:" + data.value + "\n")
             case None =>}
 
