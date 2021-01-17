@@ -42,7 +42,6 @@ class TodoController @Inject()(
     Action { request: Request[AnyContent] =>
       // response().setHeader(CACHE_CONTROL, "max-age=3600");
 
-      println("ip:" + request.remoteAddress)
       val body: AnyContent = request.body
       val jsonBody: Option[JsValue] = body.asJson
 
@@ -202,14 +201,14 @@ class TodoController @Inject()(
 
           //Counts
           println(
-            s"modelElements:${modelElements.length}\n" +
-              s"constraintDefs:${constraintDefs.length}\n" +
-              s"constraintComps:${constraintComps.length}\n"
+            s"modelElements: ${modelElements.length}\n" +
+              s"constraintDefs: ${constraintDefs.length}\n" +
+              s"constraintComps: ${constraintComps.length}"
           )
 
           //Log the ip address
           solverOptions.find(data=>data.key == "ipAddress") match {
-            case Some(data) => println ("ip address:" + data.value + "\n")
+            case Some(data) => println ("ip address: " + data.value)
             case None =>}
 
           Ok(solveModel)
