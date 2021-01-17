@@ -9,7 +9,7 @@ import play.api.mvc._
 // import spray.json._
 // import DefaultJsonProtocol._
 
-import solver.MathModel.{ConstraintComp, ConstraintDef, ModelElement,SolverOption, _}
+import solver.MathModel.{ConstraintComp, ConstraintDef, ModelElement, SolverOption, _}
 
 class TodoController @Inject()(
                                 cc: ControllerComponents
