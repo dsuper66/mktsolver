@@ -202,9 +202,9 @@ class TodoController @Inject()(
 
           //Counts
           println(
-            s"modelElements:$modelElements.length\n" +
-              "constraintDefs:$constraintDefs.length\n" +
-              s"constraintComps:$constraintComps.length\n"
+            s"modelElements:${modelElements.length}\n" +
+              s"constraintDefs:${constraintDefs.length}\n" +
+              s"constraintComps:${constraintComps.length}\n"
           )
 
           //Log the ip address
