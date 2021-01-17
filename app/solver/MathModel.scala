@@ -36,6 +36,11 @@ object MathModel {
       factorProperty: String
   )
 
+  case class SolverOption(
+      key: String,
+      value: String
+                          )
+
   object ModelElement {
     //Reads looks for this implicit which tells it how to read [String,Any]
     implicit val readsMap =
@@ -71,6 +76,10 @@ object MathModel {
   object ConstraintComp {
     //need Json deserializer for type
     implicit val reads: Reads[ConstraintComp] = Json.reads[ConstraintComp]
+  }
+
+  object SolverOption {
+    implicit val reads: Reads[SolverOption] = Json.reads[SolverOption]
   }
 
   //Solver Definitions... created by combining Elements with Constraint Defs

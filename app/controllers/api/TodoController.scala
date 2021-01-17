@@ -55,6 +55,9 @@ class TodoController @Inject()(
           val constraintComps =
             (json \ "constraintComps").as[Seq[ConstraintComp]]
 
+          val solverOptions =
+            (json \ "solverOptions").as[Seq[SolverOption]]
+
           var msg = ""
           resetMathModel()
 
@@ -189,11 +192,25 @@ class TodoController @Inject()(
             }
           }
 
+          //Full details
+          /*
           println(
-            s"SCALA data:\n $modelElements\n====\n constraintDefs:\n$constraintDefs \n====\n" +
+            s"modelElements:\n $modelElements\n====\n constraintDefs:\n$constraintDefs \n====\n" +
               s"constraintComps:\n$constraintComps\n====\n  $msg\n" +
               s"varFactors:\n$varFactorsString\n"
+          )*/
+
+          //Counts
+          println(
+            s"modelElements:$modelElements.length\n" +
+              "constraintDefs:$constraintDefs.length\n" +
+              s"constraintComps:$constraintComps.length\n"
           )
+
+          //Log the ip address
+          solverOptions.find(k=>k=="ipAddress") match {
+            case Some(data) => println ("ip address:" + data.value + "\n")
+            case None =>}
 
           Ok(solveModel)
         }
