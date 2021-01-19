@@ -202,7 +202,7 @@ class TodoController @Inject()(
           //Log the ip address
           solverOptions.find(data => data.key == "ipAddress") match {
             case Some(data) => println(
-              s"ip address: ${data.value}, " +
+              s"location: ${data.value}, " +
                 s"modelElements: ${modelElements.length}, " +
                 s"constraintDefs: ${constraintDefs.length}, " +
                 s"constraintComps: ${constraintComps.length}"
