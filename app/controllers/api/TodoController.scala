@@ -199,16 +199,14 @@ class TodoController @Inject()(
               s"varFactors:\n$varFactorsString\n"
           )*/
 
-          //Counts
-          println(
-            s"modelElements: ${modelElements.length}\n" +
-              s"constraintDefs: ${constraintDefs.length}\n" +
-              s"constraintComps: ${constraintComps.length}"
-          )
-
           //Log the ip address
-          solverOptions.find(data=>data.key == "ipAddress") match {
-            case Some(data) => println ("ip address: " + data.value)
+          solverOptions.find(data => data.key == "ipAddress") match {
+            case Some(data) => println(
+              s"ip address: ${data.value}, " +
+                s"modelElements: ${modelElements.length}, " +
+                s"constraintDefs: ${constraintDefs.length}, " +
+                s"constraintComps: ${constraintComps.length}"
+            )
             case None =>}
 
           Ok(solveModel)
